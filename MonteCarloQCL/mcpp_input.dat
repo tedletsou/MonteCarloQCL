@@ -1,0 +1,107 @@
+// Monte-Carlo code (C++) input deck 
+
+// Total number of modules
+nummod 2
+
+// Barrier and well materials
+barrier ('InAlAs', 'mole_fraction_of_first_listed', 0.52, 'temperature', 300)
+well ('InGaAs', 'mole_fraction_of_first_listed', 0.53, 'temperature', 300)
+
+// Layer thicknesses in one module (in monolayers)
+laythick 1.295239e+01	
+laythick 7.157898e+00	
+laythick 1.704262e+00	
+laythick 2.045114e+01	
+laythick 2.045114e+00	
+laythick 1.874688e+01	
+laythick 2.385966e+00	
+laythick 1.533835e+01	
+laythick 3.408523e+00	
+laythick 1.329324e+01	
+laythick 3.749375e+00	
+laythick 1.295239e+01	
+laythick 5.794489e+00	
+laythick 1.261154e+01	
+laythick 8.180455e+00	
+laythick 1.192983e+01	
+
+// Doping values in one module (in cm^-3)
+laydop 0
+laydop 0
+laydop 0
+laydop 0
+laydop 0
+laydop 0
+laydop 0
+laydop 0
+laydop 0
+laydop 0
+laydop 0
+laydop 0
+laydop 0
+laydop 221000000000000000
+laydop 221000000000000000
+laydop 0
+
+// Type of each layer (1: barrier, 2: well)
+laytype 1
+laytype 2
+laytype 1
+laytype 2
+laytype 1
+laytype 2
+laytype 1
+laytype 2
+laytype 1
+laytype 2
+laytype 1
+laytype 2
+laytype 1
+laytype 2
+laytype 1
+laytype 2
+
+// Total thickness of one module (in monolayers)
+modthick 1.527018e+02
+
+// Applied fields (in V/m)
+field_vals 0
+
+// Grid meshing density
+meshden 10
+
+// Lattive constant (in angstroms)
+a_lat 5.867644e+00
+
+// Effective masses (relative to m0)
+mstar_bar 7.328960e-02
+mstar_well 4.300319e-02
+
+// Conduction band energies (relative to conduction band of well, eV)
+cband_bar 5.195000e-01
+cband_well 0
+
+// Valence band energies (relative to conduction band well, eV)
+vband_bar -1.627371e+00
+vband_well -9.235115e-01
+
+// Light hole band energies (relative to conduction band well, eV)
+lhole_bar -1.098982e+00
+lhole_well -8.132557e-01
+
+// Split-off band energies (relative to conduction band well, eV)
+sploff_bar -1.400233e+00
+sploff_well -1.144023e+00
+
+// Delta split-off energies, eV
+delso_bar 2.997600e-01
+delso_well 3.296050e-01
+
+// Kane energies (derived from band edge, eV)
+Ep_bar 2.045898e+01
+Ep_well 2.008835e+01
+
+// Band gaps, eV
+Eg_bar 1.529640e+00
+Eg_well 8.161193e-01
+

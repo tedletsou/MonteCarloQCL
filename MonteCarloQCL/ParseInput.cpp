@@ -2,10 +2,11 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include "ParseInput.h"
 
 using namespace std;
 
-int main() {
+variables Parse(string fname) {
 
     // String for looping through .dat file
     string line;
@@ -35,127 +36,112 @@ int main() {
     string str22("Eg_bar");
     string str23("Eg_well");
 
-    // Inializing data variables
-
-    vector<double> laythick;
-    vector<double> laydop;
-    vector<double> laytype;
-    double modthick;
-    vector<double> field_vals;
-    double meshden;
-    double a_lat;
-    vector<double> mstar;
-    vector<double> cband;
-    vector<double> vband;
-    vector<double> lhole;
-    vector<double> sploff;
-    vector<double> delso;
-    vector<double> Ep;
-    vector<double> Eg;
-
     // Load input file
-    ifstream datafile("mcpp_input.dat");
+    ifstream datafile(fname);
 
     if (!datafile) {
         cout << "Unable to open file datafile.dat";
         exit(1);
     }
 
+    variables s{};
+
     while (datafile >> line) {
         // Layer thicknesses (monolayers)
         if (line.compare(str1) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            laythick.push_back(val);
+            s.laythick.push_back(val);
         }
         // Layer dopings (cm^(-3))
         else if (line.compare(str2) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            laydop.push_back(val);
+            s.laydop.push_back(val);
         }
         // Layer types (1: barrier, 2: well)
         else if (line.compare(str3) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            laytype.push_back(val);
+            s.laytype.push_back(val);
         }
         // Module thickness (monolayers)
         else if (line.compare(str4) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            modthick = val;
+            s.modthick = val;
         }
         // Applied fields (V/m)
         else if (line.compare(str5) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            field_vals.push_back(val);
+            s.field_vals.push_back(val);
         }
         // Meshing density
         else if (line.compare(str6) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            meshden = val;
+            s.meshden = val;
         }
         // Lattice constant (monolayers)
         else if (line.compare(str7) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            a_lat = val;
+            s.a_lat = val;
         }
         // Effective mass in barrier and well (rel. to m0)
         else if (line.compare(str8) == 0 || line.compare(str9) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            mstar.push_back(val);
+            s.mstar.push_back(val);
         }
         // Conduction band in barrier and well (eV)
         else if (line.compare(str10) == 0 || line.compare(str11) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            cband.push_back(val);
+            s.cband.push_back(val);
         }
         // Valence band in barrier and well (eV)
         else if (line.compare(str12) == 0 || line.compare(str13) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            vband.push_back(val);
+            s.vband.push_back(val);
         }
         // Light hole band in barrier and well (eV)
         else if (line.compare(str14) == 0 || line.compare(str15) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            lhole.push_back(val);
+            s.lhole.push_back(val);
         }
         // Split-off band in barrier and well (eV)
         else if (line.compare(str16) == 0 || line.compare(str17) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            sploff.push_back(val);
+            s.sploff.push_back(val);
         }
         // Delta split-off in barrier and well (eV)
         else if (line.compare(str18) == 0 || line.compare(str19) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            delso.push_back(val);
+            s.delso.push_back(val);
         }
         // Kane energies in barrier and well (eV)
         else if (line.compare(str20) == 0 || line.compare(str21) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            Ep.push_back(val);
+            s.Ep.push_back(val);
         }
         // Band gap energies in barrier and well (eV)
         else if (line.compare(str22) == 0 || line.compare(str23) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            Eg.push_back(val);
+            s.Eg.push_back(val);
         }
     }
 
     // Close input data file
     datafile.close();
 
-    return 0;
+    // Returns the struct
+    return s;
 }

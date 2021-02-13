@@ -1,0 +1,32 @@
+There are many steps...
+
+add goal dates for timeline
+
+(1) Initialization modules
+(2) Find space-charge
+(3) Solve the Poisson equation
+(4) Solve the Schrodinger equation
+(5) Copy wavefunctions
+(6) Calculate form factors
+(7) Find Fermi levels
+(8) Calculate phonon rates
+(9) e-e rates
+(10) Photon rates
+(11) Rate equations (density matricies?)
+(12) Final equations
+
+*** 2.12.2021 ***
+I'm able to parse a data file (poorly?).  It seems like I will need to add hole effective masses in order to properly calculate Fermi levels.  Although, this is not an urgent issue.
+
+Also need to add permittivity values.
+
+Have to figure out how to populate z-space non-uniformly depending on meshing density input.
+
+Functions in Cpp??? How to save variables over several files???
+
+Set default number of periods to 3 
+-add z-point at every interface change (going from barrier to well)
+-populate equal number of points between each interface change
+-find a way to identify barriers and wells after meshing is complete (look at MATLAB bandstructure calculation, I think QCL_solver_Ted)
+
+THEN populate effective masses (both holes and e) and permittivities at each node.

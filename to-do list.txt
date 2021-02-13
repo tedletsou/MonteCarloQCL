@@ -15,7 +15,17 @@ add goal dates for timeline
 (11) Rate equations (density matricies?)
 (12) Final equations
 
+*** 2.13.2021 ***
+
+
+Added header file for ParseInput.  Function now returns a struct to be used by GenerateZSpace (which will be used to populate simulation with material parameters).
+
+Make sure to turn OFF DROPBOX SYNCING before trying to compile.  Seems to be serious conflicts between VS2019 and Dropbox.
+
+ 
 *** 2.12.2021 ***
+
+
 I'm able to parse a data file (poorly?).  It seems like I will need to add hole effective masses in order to properly calculate Fermi levels.  Although, this is not an urgent issue.
 
 Also need to add permittivity values.

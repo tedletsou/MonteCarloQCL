@@ -1,5 +1,5 @@
-#ifndef PARSE_INPUT_H
-#define PARSE_INPUT_H
+#ifndef PARSEINPUT_H
+#define PARSEINPUT_H
 
 #include <iostream>
 #include <fstream>

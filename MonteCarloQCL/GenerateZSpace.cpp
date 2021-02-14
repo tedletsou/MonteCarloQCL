@@ -1,17 +1,27 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
-#include <string>
+#include <numeric>
 #include "ParseInput.h"
+#include "GenerateZSpace.h"
 
 using namespace std;
 
 
+
 int main() {
 
+    // Getting struct variables from parsed filed
     variables s = Parse("mcpp_input.dat");
-    cout << s.Eg[0] << endl;
-    cout << s.Ep[0] << endl;
+
+    // naming outputs of struct for convenience
+    thicknesses = s.laythick;
+    meshden     = s.meshden;
+
+    // sizing zspace to be used with partial_sum
+    zspace.resize(thicknesses.size());
+
+    partial_sum(thicknesses.begin(), thicknesses.end(), zspace.begin());
+
     return 0;
 
 }

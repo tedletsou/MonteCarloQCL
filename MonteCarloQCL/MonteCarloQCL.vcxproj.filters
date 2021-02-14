@@ -26,5 +26,8 @@
     <ClInclude Include="ParseInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GenerateZSpace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

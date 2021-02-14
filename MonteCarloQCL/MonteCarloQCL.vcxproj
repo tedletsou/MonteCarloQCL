@@ -143,6 +143,7 @@
     <ClCompile Include="ParseInput.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GenerateZSpace.h" />
     <ClInclude Include="ParseInput.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

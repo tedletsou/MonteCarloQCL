@@ -16,7 +16,7 @@ struct variables {
     vector<double> laytype;
     double modthick;
     vector<double> field_vals;
-    double meshden;
+    double MeshDen;
     double a_lat;
     vector<double> mstar;
     vector<double> cband;

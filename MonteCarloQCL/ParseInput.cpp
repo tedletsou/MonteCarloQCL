@@ -17,7 +17,7 @@ variables Parse(string fname) {
     string str3("laytype");
     string str4("modthick");
     string str5("field_vals");
-    string str6("meshden");
+    string str6("MeshDen");
     string str7("a_lat");
     string str8("mstar_bar");
     string str9("mstar_well");
@@ -27,8 +27,8 @@ variables Parse(string fname) {
     string str13("vband_well");
     string str14("lhole_bar");
     string str15("lhole_well");
-    string str16("splof_bar");
-    string str17("splof_well");
+    string str16("sploff_bar");
+    string str17("sploff_well");
     string str18("delso_bar");
     string str19("delso_well");
     string str20("Ep_bar");
@@ -81,7 +81,7 @@ variables Parse(string fname) {
         else if (line.compare(str6) == 0) {
             getline(datafile, line, '\n');
             float val = stof(line);
-            s.meshden = val;
+            s.MeshDen = val;
         }
         // Lattice constant (monolayers)
         else if (line.compare(str7) == 0) {

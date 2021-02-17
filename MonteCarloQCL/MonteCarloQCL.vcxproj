@@ -141,10 +141,12 @@
   <ItemGroup>
     <ClCompile Include="GenerateZSpace.cpp" />
     <ClCompile Include="ParseInput.cpp" />
+    <ClCompile Include="QCLMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GenerateZSpace.h" />
     <ClInclude Include="ParseInput.h" />
+    <ClInclude Include="QCLMath.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

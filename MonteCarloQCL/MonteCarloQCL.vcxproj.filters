@@ -21,12 +21,18 @@
     <ClCompile Include="GenerateZSpace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QCLMath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ParseInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GenerateZSpace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QCLMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

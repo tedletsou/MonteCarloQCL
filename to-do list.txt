@@ -15,6 +15,11 @@ add goal dates for timeline
 (11) Rate equations (density matricies?)
 (12) Final equations
 
+*** 2.17.2021 ***
+
+Updated all header files to remove standard library.  Finished parsing and generating zspace.  Started on space-charge calculation (rho and Ef).  
+
+
 *** 2.13.2021 ***
 
 

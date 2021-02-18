@@ -1,10 +1,12 @@
-#pragma once
+#ifndef CHARGEDENSITYCALC_H
+#define CHARGEDENSITYCALC_H
 
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include "GenerateZSpace.h"
 
-using namespace std;
+// yet to be determined
+std::vector<double> CalcChargeDensity(ZMaterialParmsStruct ZStruct, double TL);
 
-vector<double> CalcChargeDensity(ZMaterialParmsStruct ZStruct, double TL);
+#endif

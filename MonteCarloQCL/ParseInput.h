@@ -6,28 +6,27 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 // Inializing data variables in struct
-
 struct DeckDataStuct {
-    vector<double> laythick;
-    vector<double> laydop;
-    vector<double> laytype;
+    std::vector<double> laythick;
+    std::vector<double> laydop;
+    std::vector<double> laytype;
     double modthick;
-    vector<double> field_vals;
+    std::vector<double> field_vals;
     double MeshDen;
     double a_lat;
-    vector<double> mstar;
-    vector<double> cband;
-    vector<double> vband;
-    vector<double> lhole;
-    vector<double> sploff;
-    vector<double> delso;
-    vector<double> Ep;
-    vector<double> Eg;
+    std::vector<double> mstar;
+    std::vector<double> cband;
+    std::vector<double> vband;
+    std::vector<double> lhole;
+    std::vector<double> sploff;
+    std::vector<double> delso;
+    std::vector<double> Ep;
+    std::vector<double> Eg;
 };
 
-DeckDataStuct Parse(string fname);
+
+// Defining parsing function
+DeckDataStuct Parse(std::string fname);
 
 #endif

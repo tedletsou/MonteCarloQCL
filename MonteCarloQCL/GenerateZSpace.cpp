@@ -10,25 +10,23 @@
 #include <functional> 
 #include<algorithm>
 
-using namespace std;
-
 ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData) 
 {
 
     //Thickness of Each layer along Z
-    vector<double> ZThickness;
+    std::vector<double> ZThickness;
 
     //Intereface Posistions along the Z axis
-    vector<double> ZSpace;
+    std::vector<double> ZSpace;
 
     //Create Struct to Load Z Parameters into
     ZMaterialParmsStruct ZStruct{};
 
     // Temporary Vector used in loop to build Z Grid
-    vector<double> TempVector;
+    std::vector<double> TempVector;
 
     // Temporary doping vector used in loop to build Z Grid
-    vector<double> TempDopingVector;
+    std::vector<double> TempDopingVector;
 
     // naming outputs of struct for convenience
     ZThickness = DeckData.laythick;

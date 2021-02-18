@@ -20,8 +20,6 @@ int main()
 	double TL = 10;
 
 	CalcChargeDensity(ZMaterialStruct, TL);
-	
-
 
 return 0;
 }

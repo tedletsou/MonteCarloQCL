@@ -8,31 +8,30 @@
 #include "GenerateZSpace.h"
 #include "ParseInput.h"
 
-using namespace std;
-
-
+// Define output struct for CreateZParams
 struct ZMaterialParmsStruct {
-	vector <double> ZGrid;
+	std::vector <double> ZGrid;
 	//Conduction Band Edge CBE
-	vector<double> CBand;
+	std::vector<double> CBand;
 	//Effective Masses along Z
-	vector<double> ZMass;
+	std::vector<double> ZMass;
 	//Valence Band Edge VBand along Z
-	vector<double> ZVBand;
+	std::vector<double> ZVBand;
 	//Light Hole band Edge VBand along Z
-	vector<double> ZLHole;
+	std::vector<double> ZLHole;
 	//Split off band Edge VBand along Z
-	vector<double> ZSploff;
+	std::vector<double> ZSploff;
 	// Delta Energy Difference between Light Hole and Split Off Bands along Z
-	vector<double> ZDelta;
+	std::vector<double> ZDelta;
 	// Kane Energies along Z
-	vector<double> ZKane;
+	std::vector<double> ZKane;
 	// Band Gap along Z
-	vector<double> ZBandGap;
+	std::vector<double> ZBandGap;
 	// Doping along Z
-	vector<double> ZDoping;
+	std::vector<double> ZDoping;
 };
 
+// Define create zparams function
 ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData);
 
 

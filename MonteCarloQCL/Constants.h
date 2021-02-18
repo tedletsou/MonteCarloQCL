@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 //SI Units for Physical Units
 
@@ -21,4 +21,4 @@ const double hbar = 1.054E-34;
 //PI
 const double Pi = 3.14159;
 
-//Nc, Effective Electron 
+#endif

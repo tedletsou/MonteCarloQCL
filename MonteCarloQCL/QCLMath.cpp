@@ -34,7 +34,6 @@ std::vector<double> linspace(double start_in, double end_in, int num_in)
 // Function to multiply vector by scalar
 std::vector<double> MultiplyVectorByScalar(std::vector<double>& v, double k) 
 {
-
     std::transform(v.begin(), v.end(), v.begin(), [k](double& c) { return c * k; });
     return v;
 }

@@ -10,7 +10,7 @@ using namespace std;
 
 // Inializing data variables in struct
 
-struct variables {
+struct DeckDataStuct {
     vector<double> laythick;
     vector<double> laydop;
     vector<double> laytype;
@@ -28,6 +28,6 @@ struct variables {
     vector<double> Eg;
 };
 
-variables Parse(string fname);
+DeckDataStuct Parse(string fname);
 
 #endif

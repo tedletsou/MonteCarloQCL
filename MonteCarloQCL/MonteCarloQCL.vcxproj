@@ -139,11 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ChargeDensityCalc.cpp" />
     <ClCompile Include="GenerateZSpace.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="ParseInput.cpp" />
     <ClCompile Include="QCLMath.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ChargeDensityCalc.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="GenerateZSpace.h" />
     <ClInclude Include="ParseInput.h" />
     <ClInclude Include="QCLMath.h" />

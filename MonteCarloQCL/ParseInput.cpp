@@ -6,7 +6,7 @@
 
 using namespace std;
 
-variables Parse(string fname) {
+DeckDataStuct Parse(string fname) {
 
     // String for looping through .dat file
     string line;
@@ -44,7 +44,7 @@ variables Parse(string fname) {
         exit(1);
     }
 
-    variables s{};
+    DeckDataStuct s{};
 
     while (datafile >> line) {
         // Layer thicknesses (monolayers)

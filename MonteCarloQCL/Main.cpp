@@ -28,7 +28,7 @@ int main()
 
 	
 	//Calculate Band Structure
-	double E = 0.0;
+	double E = 0.5;
 	
 	WFStruct Wf = Shoot(E, ZMaterialStruct.ZGridm, ZMaterialStruct.CBand, ZMaterialStruct.ZMass);
 

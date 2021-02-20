@@ -5,10 +5,11 @@
 #include <numeric>
 #include "ParseInput.h"
 #include "GenerateZSpace.h"
+#include "Constants.h"
 #include "QCLMath.h"
 #include <fstream>
 #include <functional> 
-#include<algorithm>
+#include <algorithm>
 
 ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData) 
 {
@@ -55,25 +56,26 @@ ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData)
         //Concatenate Zgrid with TempVector
         ZStruct.ZGrid.insert(ZStruct.ZGrid.end(), TempVector.begin(), TempVector.end());
 
-                // Concatenate ZDoping with TempDopingVector
+        // Concatenate ZDoping with TempDopingVector
         ZStruct.ZDoping.insert(ZStruct.ZDoping.end(), TempDopingVector.begin(), TempDopingVector.end());
     }
 
     //Calculate Zgrid in meters, ZGrid * lattice constant/2
-    ZStruct.ZGridm = ZStruct.ZGrid;//* (1e-10 * DeckData.a_lat / 2);
+    double MetersConversion = DeckData.a_lat * 0.5 * 1E-10;
+
+    ZStruct.ZGridm = ZStruct.ZGrid * MetersConversion;
     
     // Constant to convert from cm^(-3) to m^(-3)
     double DopingConversion = 1E6;
 
     // Converting doping array from cm^(-3) to m^(-3)
     ZStruct.ZDoping = ZStruct.ZDoping * DopingConversion;
-
     
     for (int k = 0; k < ZThickness.size(); k++)
     {
         //Create Material Properties for wells and Barriers along Z, based on laytype (i.e. well or barrier material)
         ZStruct.CBand.insert(ZStruct.CBand.end(), DeckData.MeshDen -1, DeckData.cband[(int)DeckData.laytype[k]-1 ]);
-        ZStruct.ZMass.insert(ZStruct.ZMass.end(), DeckData.MeshDen - 1, DeckData.mstar[(int)DeckData.laytype[k] - 1]);
+        ZStruct.ZMass.insert(ZStruct.ZMass.end(), DeckData.MeshDen - 1, DeckData.mstar[(int)DeckData.laytype[k] - 1] * me);
         ZStruct.ZVBand.insert(ZStruct.ZVBand.end(), DeckData.MeshDen - 1, DeckData.vband[(int)DeckData.laytype[k] - 1]);
         ZStruct.ZLHole.insert(ZStruct.ZLHole.end(), DeckData.MeshDen - 1, DeckData.lhole[(int)DeckData.laytype[k] - 1]);
         ZStruct.ZSploff.insert(ZStruct.ZSploff.end(), DeckData.MeshDen -1, DeckData.sploff[(int)DeckData.laytype[k] - 1]);
@@ -83,7 +85,6 @@ ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData)
         
     }
 
-    
     //Optional Code to write ZGrid and layer stucture to a File
     /*
     FILE* fpCBE = fopen("LayerStructure.txt", "w+");

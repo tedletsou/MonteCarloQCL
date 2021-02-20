@@ -20,7 +20,7 @@ int main()
 
 	double TL = 10;
 
-	ZMaterialParmsStruct ZMaterialStruct2 = ZMaterialStruct;
+	//ZMaterialParmsStruct ZMaterialStruct2 = ZMaterialStruct;
 
 	
 	//Calculate initial Dopant Ion Distribution and Fermi Levels from Dopant Profile and Temperature 
@@ -28,9 +28,9 @@ int main()
 
 	
 	//Calculate Band Structure
-	double E = .1;
+	double E = 0.0;
 	
-	WFStruct Wf = Shoot(E, ZMaterialStruct.ZGridm, ZMaterialStruct2.CBand, ZMaterialStruct.ZMass);
+	WFStruct Wf = Shoot(E, ZMaterialStruct.ZGridm, ZMaterialStruct.CBand, ZMaterialStruct.ZMass);
 
 	
 
@@ -41,7 +41,7 @@ int main()
 
 	std::cout << Wf.NumZeros << std::endl;
 
-
+	
 
 return 0;
 }

@@ -55,15 +55,18 @@ ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData)
         //Concatenate Zgrid with TempVector
         ZStruct.ZGrid.insert(ZStruct.ZGrid.end(), TempVector.begin(), TempVector.end());
 
-        // Concatenate ZDoping with TempDopingVector
+                // Concatenate ZDoping with TempDopingVector
         ZStruct.ZDoping.insert(ZStruct.ZDoping.end(), TempDopingVector.begin(), TempDopingVector.end());
     }
+
+    //Calculate Zgrid in meters, ZGrid * lattice constant/2
+    ZStruct.ZGridm = ZStruct.ZGrid;//* (1e-10 * DeckData.a_lat / 2);
     
     // Constant to convert from cm^(-3) to m^(-3)
     double DopingConversion = 1E6;
 
     // Converting doping array from cm^(-3) to m^(-3)
-    ZStruct.ZDoping = MultiplyVectorByScalar(ZStruct.ZDoping, DopingConversion);
+    ZStruct.ZDoping = ZStruct.ZDoping * DopingConversion;
 
     
     for (int k = 0; k < ZThickness.size(); k++)

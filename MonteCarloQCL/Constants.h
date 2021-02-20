@@ -10,7 +10,10 @@ const double kb = 1.38E-23;
 const double me = 9.109E-31;
 
 //Charge of electron
-const double e = 1.602E-19;
+const double ec = 1.602E-19;
+
+// Euiler Number exp(1)
+const double e = 2.7183;
 
 //Planks Constant
 const double h = 6.626E-34;

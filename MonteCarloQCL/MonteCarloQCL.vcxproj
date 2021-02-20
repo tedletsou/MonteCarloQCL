@@ -144,6 +144,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ParseInput.cpp" />
     <ClCompile Include="QCLMath.cpp" />
+    <ClCompile Include="Shoot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChargeDensityCalc.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="GenerateZSpace.h" />
     <ClInclude Include="ParseInput.h" />
     <ClInclude Include="QCLMath.h" />
+    <ClInclude Include="Shoot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

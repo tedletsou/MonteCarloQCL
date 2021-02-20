@@ -5,12 +5,15 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include "QCLMath.h"
 #include "GenerateZSpace.h"
 #include "ParseInput.h"
 
 // Define output struct for CreateZParams
 struct ZMaterialParmsStruct {
-	std::vector <double> ZGrid;
+	std::vector<double> ZGrid;
+	//ZGrid in Meters
+	std::vector<double> ZGridm;
 	//Conduction Band Edge CBE
 	std::vector<double> CBand;
 	//Effective Masses along Z

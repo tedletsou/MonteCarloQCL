@@ -7,6 +7,7 @@
 #include "GenerateZSpace.h"
 #include "ChargeDensityCalc.h"
 #include "QCLMath.h"
+#include "Shoot.h"
 #include <fstream>
 
 int main() 
@@ -19,7 +20,28 @@ int main()
 
 	double TL = 10;
 
-	CalcChargeDensity(ZMaterialStruct, TL);
+	ZMaterialParmsStruct ZMaterialStruct2 = ZMaterialStruct;
+
+	
+	//Calculate initial Dopant Ion Distribution and Fermi Levels from Dopant Profile and Temperature 
+	ChargeDistSturct InitDopantDensity = CalcInitDopantDensity(ZMaterialStruct, TL);
+
+	
+	//Calculate Band Structure
+	double E = .1;
+	
+	WFStruct Wf = Shoot(E, ZMaterialStruct.ZGridm, ZMaterialStruct2.CBand, ZMaterialStruct.ZMass);
+
+	
+
+	for (int k = 0; k < Wf.Wavefunction.size(); k++)
+	{
+		std::cout << Wf.Wavefunction[k] << std::endl;
+	}
+
+	std::cout << Wf.NumZeros << std::endl;
+
+
 
 return 0;
 }

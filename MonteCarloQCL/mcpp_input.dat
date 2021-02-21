@@ -68,7 +68,7 @@ modthick 1.527018e+02
 field_vals 0
 
 // Grid meshing density
-MeshDen 10
+MeshDen 100
 
 // Lattive constant (in angstroms)
 a_lat 5.867644e+00

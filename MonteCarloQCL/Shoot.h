@@ -9,6 +9,7 @@
 #include <vector>
 #include "GenerateZSpace.h"
 
+
 struct WFStruct 
 {
 	std::vector<double> Wavefunction;

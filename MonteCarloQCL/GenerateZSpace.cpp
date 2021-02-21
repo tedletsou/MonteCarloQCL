@@ -86,17 +86,18 @@ ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData)
     }
 
     //Optional Code to write ZGrid and layer stucture to a File
-    /*
+    /**/
     FILE* fpCBE = fopen("LayerStructure.txt", "w+");
 
     for (int k = 0; k < ZStruct.CBand.size(); k++)
     {
-        fprintf(fpCBE, "%f \n", CBE[k]);
-
+        fprintf(fpCBE, "%f \t", ZStruct.CBand[k]);
+        fprintf(fpCBE, "%f \n", ZStruct.ZGridm[k] * 1E10);
     }
 
     fclose(fpCBE);
     
+    /*
     FILE* fp = fopen("ZDopingCheck.txt", "w+");  
 
     for (int k = 0; k < ZStruct.ZDoping.size(); k++)

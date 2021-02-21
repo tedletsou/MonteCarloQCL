@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoundEigenenergies.cpp" />
     <ClCompile Include="ChargeDensityCalc.cpp" />
     <ClCompile Include="GenerateZSpace.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="Shoot.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundEigenenergies.h" />
     <ClInclude Include="ChargeDensityCalc.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="GenerateZSpace.h" />

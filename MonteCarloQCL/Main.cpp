@@ -9,6 +9,7 @@
 #include "QCLMath.h"
 #include "Shoot.h"
 #include <fstream>
+#include "BoundEigenenergies.h"
 
 int main() 
 {
@@ -26,22 +27,17 @@ int main()
 	//Calculate initial Dopant Ion Distribution and Fermi Levels from Dopant Profile and Temperature 
 	ChargeDistSturct InitDopantDensity = CalcInitDopantDensity(ZMaterialStruct, TL);
 
-	
 	//Calculate Band Structure
-	double E = 0.5;
+	double E = 0.4377;
 	
 	WFStruct Wf = Shoot(E, ZMaterialStruct.ZGridm, ZMaterialStruct.CBand, ZMaterialStruct.ZMass);
 
-	
+	//std::cout << Wf.NumZeros << std::endl;	
+	//std::cout << Wf.LastValue << std::endl;
 
-	for (int k = 0; k < Wf.Wavefunction.size(); k++)
-	{
-		std::cout << Wf.Wavefunction[k] << std::endl;
-	}
+	// Bound the eigenenergies for root finder
 
-	std::cout << Wf.NumZeros << std::endl;
-
-	
+	double test = CalcEnergyBounds(ZMaterialStruct);
 
 return 0;
 }

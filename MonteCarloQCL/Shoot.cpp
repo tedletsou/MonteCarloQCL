@@ -1,8 +1,11 @@
+#pragma warning(disable : 4996)
+
 #include <math.h>
 #include "Shoot.h"
 #include "QCLMath.h"
 #include "Constants.h"
 #include <complex> 
+#include <fstream>
 
 
 WFStruct Shoot(double WfEnergy, std::vector<double> ZGridm, std::vector<double> Potential, std::vector<double> ms)
@@ -56,5 +59,14 @@ WFStruct Shoot(double WfEnergy, std::vector<double> ZGridm, std::vector<double> 
     Result.NumZeros = NumZero;
     Result.LastValue = F.back();
        
+    FILE* fpwf = fopen("Test Wavefunction.txt", "w+");
+
+    for (int k = 0; k < Result.Wavefunction.size(); k++)
+    {
+        fprintf(fpwf, "%.20g \n", Result.Wavefunction[k]);
+    }
+
+    fclose(fpwf);
+
     return(Result);
 }

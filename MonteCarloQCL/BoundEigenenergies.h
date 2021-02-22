@@ -4,8 +4,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <gsl/gsl_linalg.h>
 #include "GenerateZSpace.h"
 
-double CalcEnergyBounds(ZMaterialParmsStruct ZStruct);
+QCLMat CalcEnergyBounds(ZMaterialParmsStruct ZStruct);
 
 #endif

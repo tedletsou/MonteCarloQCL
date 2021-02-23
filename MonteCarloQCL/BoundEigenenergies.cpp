@@ -17,8 +17,8 @@ QCLMat CalcEnergyBounds(ZMaterialParmsStruct ZStruct)
 	auto MinMax = std::minmax_element(ZStruct.CBand.begin(), ZStruct.CBand.end());
 	
 	// Calculate number of zeros at the min and max conduction band energy
-	WFStruct BottomBand = Shoot(*MinMax.first, ZStruct.ZGridm, ZStruct.CBand, ZStruct.ZMass);
-	WFStruct TopBand = Shoot(*MinMax.second, ZStruct.ZGridm, ZStruct.CBand, ZStruct.ZMass);
+	WFStruct BottomBand = Shoot(*MinMax.first, ZStruct, ZStruct.CBand);
+	WFStruct TopBand = Shoot(*MinMax.second, ZStruct, ZStruct.CBand);
 
 	// The number of wavefunctions is equal to the number of zeros at the top of the band - numbe of zeros at bottom
 	int NumWavefunction = TopBand.NumZeros - BottomBand.NumZeros;
@@ -37,7 +37,7 @@ QCLMat CalcEnergyBounds(ZMaterialParmsStruct ZStruct)
 		while (ZeroAtBounds[1][k] - ZeroAtBounds[0][k] > 1)
 		{
 			// Generate Wave function at current Energy Bound
-			WFStruct MidPointWF = Shoot(MidpointEnergy, ZStruct.ZGridm, ZStruct.CBand, ZStruct.ZMass);
+			WFStruct MidPointWF = Shoot(MidpointEnergy, ZStruct, ZStruct.CBand);
 
 			//Interate through the EnergyBound and ZeroBounds Matricies and update with new bounds based on Energy from last shooting calculation
 			for (int n = 0; n < NumWavefunction; n++)

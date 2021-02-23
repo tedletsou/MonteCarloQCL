@@ -4,11 +4,12 @@
 #include "Shoot.h"
 #include "QCLMath.h"
 #include "Constants.h"
+#include "EffectiveMass.h"
 #include <complex> 
 #include <fstream>
 
 
-WFStruct Shoot(double WfEnergy, std::vector<double> ZGridm, std::vector<double> Potential, std::vector<double> ms)
+WFStruct Shoot(double WfEnergy, ZMaterialParmsStruct ZStruct, std::vector<double> Potential)
 {
     //Following Physics of Photonic Devices 
 
@@ -22,6 +23,9 @@ WFStruct Shoot(double WfEnergy, std::vector<double> ZGridm, std::vector<double> 
     //Declare k vector
     std::complex<double> k (0, 0);
 
+    //Calculate the Effective Mass
+    std::vector<double> ms= CalcEffectiveMass(WfEnergy, ZStruct);
+
     //Number of Nodes in the wavefunction, i.e. everytime F(z) changes sign
     int NumZero=0;
 
@@ -34,7 +38,7 @@ WFStruct Shoot(double WfEnergy, std::vector<double> ZGridm, std::vector<double> 
         k = std::sqrt(ksquared);
 
         // Calculate difference in node position in meters
-        double dz = (ZGridm[n + 1] - ZGridm[n]);
+        double dz = (ZStruct.ZGridm[n + 1] - ZStruct.ZGridm[n]);
 
         //Calculate New Values of Psi (F) and Psi' (G) for next Z value
 

@@ -3,13 +3,13 @@
 #include <gsl/gsl_roots.h>
 #include <gsl/gsl_math.h>
 #include "QCLMath.h"
+#include "GenerateZSpace.h"
 
 
-std::vector<double> EigenEnergyCalc(QCLMat EigenEnergyBounds, std::vector<double> ZGridm, std::vector<double> Potential, std::vector<double> ms, double EnergyTolerance);
+std::vector<double> EigenEnergyCalc(QCLMat EigenEnergyBounds, ZMaterialParmsStruct ZStruct, std::vector<double> Potential, double EnergyTolerance);
 
 struct SolverParams 
 {
-	std::vector<double> ZGridm;
 	std::vector<double> Potential;
-	std::vector<double> ms;
+	ZMaterialParmsStruct ZStruct;
 };

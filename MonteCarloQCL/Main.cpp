@@ -28,7 +28,7 @@ int main()
 
 	//Calculate Band Structure
 	double E = 0.4377;
-	
+
 	// Find the Energy Bounds for each State in the Conduction Band
 	QCLMat EnergyBounds = CalcEnergyBounds(ZMaterialStruct);
 
@@ -45,7 +45,7 @@ int main()
 
 
 	// Find the Energy of each State in the Conduction Band based of Energy Bounds found above, using root finder in GNU Scientific Library (GSL), [Must inlcude in Project to function]
-	std::vector<double> EigenEnergies = EigenEnergyCalc(EnergyBounds, ZMaterialStruct.ZGridm, ZMaterialStruct.CBand, ZMaterialStruct.ZMass, EnergyTolerance);
+	std::vector<double> EigenEnergies = EigenEnergyCalc(EnergyBounds, ZMaterialStruct, ZMaterialStruct.CBand, EnergyTolerance);
 
 	std::cout << std::endl << "Energy Test Part" << std::endl;
 
@@ -54,7 +54,7 @@ int main()
 		std::cout << EigenEnergies[n] << std::endl;
 	}
 
-	std::vector<WFStruct> WaveFunctions = CalculateWaveFunctions(EigenEnergies, ZMaterialStruct.ZGridm, ZMaterialStruct.CBand, ZMaterialStruct.ZMass);
+	std::vector<WFStruct> WaveFunctions = CalculateWaveFunctions(EigenEnergies, ZMaterialStruct, ZMaterialStruct.CBand);
 
 
 	//Optional Code to write ZGrid and layer stucture to a File

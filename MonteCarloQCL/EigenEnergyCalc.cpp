@@ -7,6 +7,8 @@
 #include "EigenEnergyCalc.h"
 #include "QCLMath.h"
 #include "Constants.h"
+#include "GenerateZSpace.h"
+#include "EffectiveMass.h"
 
 
 double ShootRoot(double WfEnergy, void* params)
@@ -14,8 +16,8 @@ double ShootRoot(double WfEnergy, void* params)
     struct SolverParams* p = (struct SolverParams*)params;
 
     std::vector<double> Potential = p->Potential;
-    std::vector<double> ZGridm = p->ZGridm;
-    std::vector<double> ms = p->ms;
+    ZMaterialParmsStruct ZStruct = p->ZStruct;
+
 
     //Following Physics of Photonic Devices 
 
@@ -25,6 +27,9 @@ double ShootRoot(double WfEnergy, void* params)
 
     //Declare k vector
     std::complex<double> k(0, 0);
+
+    //Calculate Effective Mass
+    std::vector<double> ms = CalcEffectiveMass(WfEnergy, ZStruct);
 
     //Number of Nodes in the wavefunction, i.e. everytime F(z) changes sign
     int NumZero = 0;
@@ -38,7 +43,7 @@ double ShootRoot(double WfEnergy, void* params)
         k = std::sqrt(ksquared);
 
         // Calculate difference in node position in meters
-        double dz = (ZGridm[n + 1] - ZGridm[n]);
+        double dz = (ZStruct.ZGridm[n + 1] - ZStruct.ZGridm[n]);
 
         //Calculate New Values of Psi (F) and Psi' (G) for next Z value
 
@@ -63,13 +68,13 @@ double ShootRoot(double WfEnergy, void* params)
 
 
 
-std::vector<double> EigenEnergyCalc(QCLMat EigenEnergyBounds, std::vector<double> ZGridm, std::vector<double> Potential, std::vector<double> ms, double EnergyTolerance)
+std::vector<double> EigenEnergyCalc(QCLMat EigenEnergyBounds, ZMaterialParmsStruct ZStruct, std::vector<double> Potential, double EnergyTolerance)
 {
     //Vector used to Store Eigen Energies
     std::vector<double> EigenEnergies{};
 
     //Struct used to contain parameters for the function ShootRoot
-    SolverParams ShootRootParams{ ZGridm, Potential, ms };
+    SolverParams ShootRootParams{ Potential, ZStruct };
 
     //Updated bounds from FSolver used to calculate Solver Convergence
     double ELo;

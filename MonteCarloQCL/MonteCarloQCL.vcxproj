@@ -152,6 +152,7 @@
     <ClCompile Include="BoundEigenenergies.cpp" />
     <ClCompile Include="CalcWaveFunctions.cpp" />
     <ClCompile Include="ChargeDensityCalc.cpp" />
+    <ClCompile Include="EffectiveMass.cpp" />
     <ClCompile Include="EigenEnergyCalc.cpp" />
     <ClCompile Include="GenerateZSpace.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="BoundEigenenergies.h" />
     <ClInclude Include="ChargeDensityCalc.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="EffectiveMass.h" />
     <ClInclude Include="EigenEnergyCalc.h" />
     <ClInclude Include="GenerateZSpace.h" />
     <ClInclude Include="CalcWaveFunction.h" />

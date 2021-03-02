@@ -23,6 +23,7 @@ struct DeckDataStuct {
     std::vector<double> delso;
     std::vector<double> Ep;
     std::vector<double> Eg;
+    std::vector<double> Permitvity;
 };
 
 

@@ -1,24 +1,18 @@
-
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <cmath>
 #include <algorithm>
+#include <vector>
+#include "BoundEigenDebug.h"
 #include "GenerateZSpace.h"
-#include "Constants.h"
 #include "QCLMath.h"
 #include "Shoot.h"
-#include "PoissonSolver.h"
-#include "ChargeDensityCalc.h"
 
-QCLMat CalcEnergyBounds(ZMaterialParmsStruct ZStruct)
+
+QCLMat CalcEnergyBoundsDebug(ZMaterialParmsStruct ZStruct)
 {
-
 	//Used to find the Energy Bounds for each state in the Conduction Band, uses number of Zeros in the Wavefunction to distinguish between states
 
 	// Find min and max conduction band energy 
 	auto MinMax = std::minmax_element(ZStruct.Potential.begin(), ZStruct.Potential.end());
-	
+
 	// Calculate number of zeros at the min and max conduction band energy
 	WFStruct BottomBand = Shoot(*MinMax.first, ZStruct);
 	WFStruct TopBand = Shoot(*MinMax.second, ZStruct);
@@ -26,17 +20,16 @@ QCLMat CalcEnergyBounds(ZMaterialParmsStruct ZStruct)
 	// The number of wavefunctions is equal to the number of zeros at the top of the band - number of zeros at bottom
 	int NumWavefunction = TopBand.NumZeros - BottomBand.NumZeros;
 
+	// Initializing matrix that keeps track of zeros
+	QCLMat ZeroAtBounds{ std::vector<double>(NumWavefunction, 0), std::vector<double>(NumWavefunction, NumWavefunction) };
+
+	// Initializing matrix that keeps track of bounded energies
+	QCLMat EnergyAtBounds{ std::vector<double>(NumWavefunction, 0), std::vector<double>(NumWavefunction, *MinMax.second) };
+
 	// Initial midpoint energy for bisection search of eigenenergy bounds
 	double MidpointEnergy = (*MinMax.second + *MinMax.first) / 2;
 
-	// Initializing matrix that keeps track of zeros
-	QCLMat ZeroAtBounds{ std::vector<double> (NumWavefunction, 0), std::vector<double>(NumWavefunction, NumWavefunction) };
-
-	// Initializing matrix that keeps track of bounded energies
-	QCLMat EnergyAtBounds{ std::vector<double>(NumWavefunction, *MinMax.first), std::vector<double>(NumWavefunction, *MinMax.second) };
-
-
-	for (int k = 0; k < NumWavefunction; k++) 
+	for (int k = 0; k < NumWavefunction; k++)
 	{
 		while (ZeroAtBounds[1][k] - ZeroAtBounds[0][k] > 1)
 		{
@@ -71,8 +64,7 @@ QCLMat CalcEnergyBounds(ZMaterialParmsStruct ZStruct)
 	//	std::cout  << std::endl << ZeroAtBounds[0][n] << std::endl;
 	//}
 
-	QCLMat EnergyAtBound = EnergyAtBounds;
 
-	return(EnergyAtBound);
+	return EnergyAtBounds;
 
 }

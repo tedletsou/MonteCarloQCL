@@ -15,14 +15,13 @@ double ShootRoot(double WfEnergy, void* params)
 {
     struct SolverParams* p = (struct SolverParams*)params;
 
-    std::vector<double> Potential = p->Potential;
     ZMaterialParmsStruct ZStruct = p->ZStruct;
 
 
     //Following Physics of Photonic Devices 
 
     //Initial start of the wf, Psi(F)=0  Psi'(G)=1
-    std::vector<double> F(Potential.size(), 0.0);
+    std::vector<double> F(ZStruct.Potential.size(), 0.0);
     std::vector<double> G(F.size(), 1.0);
 
     //Declare k vector
@@ -34,10 +33,10 @@ double ShootRoot(double WfEnergy, void* params)
     //Number of Nodes in the wavefunction, i.e. everytime F(z) changes sign
     int NumZero = 0;
 
-    for (int n = 0; n < Potential.size() - 1; n++)
+    for (int n = 0; n < ZStruct.Potential.size() - 1; n++)
     {
 
-        std::complex<double> ksquared = 2 * ms[n] * ec * (WfEnergy - Potential[n]) * pow(hbar, -2);
+        std::complex<double> ksquared = 2 * ms[n] * ec * (WfEnergy - ZStruct.Potential[n]) * pow(hbar, -2);
 
         //K-vector, sqrt(2ms(E-V)/hb^2)
         k = std::sqrt(ksquared);
@@ -68,13 +67,13 @@ double ShootRoot(double WfEnergy, void* params)
 
 
 
-std::vector<double> EigenEnergyCalc(QCLMat EigenEnergyBounds, ZMaterialParmsStruct ZStruct, std::vector<double> Potential, double EnergyTolerance)
+std::vector<double> EigenEnergyCalc(QCLMat EigenEnergyBounds, ZMaterialParmsStruct ZStruct, double EnergyTolerance)
 {
     //Vector used to Store Eigen Energies
     std::vector<double> EigenEnergies{};
 
     //Struct used to contain parameters for the function ShootRoot
-    SolverParams ShootRootParams{ Potential, ZStruct };
+    SolverParams ShootRootParams{ZStruct};
 
     //Updated bounds from FSolver used to calculate Solver Convergence
     double ELo;

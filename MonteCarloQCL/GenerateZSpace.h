@@ -16,6 +16,10 @@ struct ZMaterialParmsStruct {
 	std::vector<double> ZGridm;
 	//Conduction Band Edge CBE
 	std::vector<double> CBand;
+	//Total Potential of the QCL Structure
+	std::vector<double> Potential;
+	//Charge Density
+	std::vector<double> rho;
 	//Effective Masses along Z
 	std::vector<double> ZMass;
 	//Valence Band Edge VBand along Z
@@ -32,6 +36,8 @@ struct ZMaterialParmsStruct {
 	std::vector<double> ZBandGap;
 	// Doping along Z
 	std::vector<double> ZDoping;
+	// Doping along Z
+	std::vector<double> ZPermitivity;
 };
 
 // Define create zparams function

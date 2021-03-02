@@ -149,7 +149,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BoundEigenenergies.cpp" />
+    <ClCompile Include="BoundEigenenergies.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Disabled</Optimization>
+    </ClCompile>
     <ClCompile Include="CalcWaveFunctions.cpp" />
     <ClCompile Include="ChargeDensityCalc.cpp" />
     <ClCompile Include="EffectiveMass.cpp" />
@@ -157,6 +159,7 @@
     <ClCompile Include="GenerateZSpace.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ParseInput.cpp" />
+    <ClCompile Include="PoissonSolver.cpp" />
     <ClCompile Include="QCLMath.cpp" />
     <ClCompile Include="Shoot.cpp" />
   </ItemGroup>
@@ -169,6 +172,7 @@
     <ClInclude Include="GenerateZSpace.h" />
     <ClInclude Include="CalcWaveFunction.h" />
     <ClInclude Include="ParseInput.h" />
+    <ClInclude Include="PoissonSolver.h" />
     <ClInclude Include="QCLMath.h" />
     <ClInclude Include="Shoot.h" />
   </ItemGroup>

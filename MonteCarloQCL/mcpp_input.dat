@@ -40,7 +40,7 @@ laydop 0
 laydop 0
 laydop 0
 laydop 221000000000000000
-laydop 221000000000000000
+laydop 0
 laydop 0
 
 // Type of each layer (1: barrier, 2: well)
@@ -65,10 +65,10 @@ laytype 2
 modthick 1.527018e+02
 
 // Applied fields (in V/m)
-field_vals 0
+field_vals -6e6
 
 // Grid meshing density
-MeshDen 100
+MeshDen 10
 
 // Lattive constant (in angstroms)
 a_lat 5.867644e+00
@@ -105,3 +105,6 @@ Ep_well 2.008835e+01
 Eg_bar 1.529640e+00
 Eg_well 8.161193e-01
 
+// Relatvity Permitivity, unitless
+Perm_bar 9.7e+00
+Perm_well 1.15e+01

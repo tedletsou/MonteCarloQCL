@@ -45,6 +45,9 @@
     <ClCompile Include="EffectiveMass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PoissonSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ParseInput.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EffectiveMass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PoissonSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

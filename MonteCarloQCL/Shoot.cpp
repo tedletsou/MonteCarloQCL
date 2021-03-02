@@ -9,7 +9,7 @@
 #include <fstream>
 
 
-WFStruct Shoot(double WfEnergy, ZMaterialParmsStruct ZStruct, std::vector<double> Potential)
+WFStruct Shoot(double WfEnergy, ZMaterialParmsStruct ZStruct)
 {
     //Following Physics of Photonic Devices 
 
@@ -17,7 +17,7 @@ WFStruct Shoot(double WfEnergy, ZMaterialParmsStruct ZStruct, std::vector<double
     WFStruct Result;
 
     //Initial start of the wf, Psi(F)=0  Psi'(G)=1
-    std::vector<double> F(Potential.size(), 0.0);
+    std::vector<double> F(ZStruct.Potential.size(), 0.0);
     std::vector<double> G(F.size(), 1.0);
     
     //Declare k vector
@@ -29,10 +29,10 @@ WFStruct Shoot(double WfEnergy, ZMaterialParmsStruct ZStruct, std::vector<double
     //Number of Nodes in the wavefunction, i.e. everytime F(z) changes sign
     int NumZero=0;
 
-    for (int n = 0; n < Potential.size()-1; n++)
+    for (int n = 0; n < ZStruct.Potential.size()-1; n++)
     {
         
-        std::complex<double> ksquared = 2 * ms[n] * ec * (WfEnergy - Potential[n]) * pow(hbar, -2);
+        std::complex<double> ksquared = 2 * ms[n] * ec * (WfEnergy - ZStruct.Potential[n]) * pow(hbar, -2);
 
         //K-vector, sqrt(2ms(E-V)/hb^2)
         k = std::sqrt(ksquared);

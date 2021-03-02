@@ -58,6 +58,7 @@ ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData)
 
         // Concatenate ZDoping with TempDopingVector
         ZStruct.ZDoping.insert(ZStruct.ZDoping.end(), TempDopingVector.begin(), TempDopingVector.end());
+
     }
 
     //Calculate Zgrid in meters, ZGrid * lattice constant/2
@@ -75,6 +76,7 @@ ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData)
     {
         //Create Material Properties for wells and Barriers along Z, based on laytype (i.e. well or barrier material)
         ZStruct.CBand.insert(ZStruct.CBand.end(), DeckData.MeshDen -1, DeckData.cband[(int)DeckData.laytype[k]-1 ]);
+        ZStruct.Potential.insert(ZStruct.Potential.end(), DeckData.MeshDen - 1, DeckData.cband[(int)DeckData.laytype[k] - 1]);
         ZStruct.ZMass.insert(ZStruct.ZMass.end(), DeckData.MeshDen - 1, DeckData.mstar[(int)DeckData.laytype[k] - 1] * me);
         ZStruct.ZVBand.insert(ZStruct.ZVBand.end(), DeckData.MeshDen - 1, DeckData.vband[(int)DeckData.laytype[k] - 1]);
         ZStruct.ZLHole.insert(ZStruct.ZLHole.end(), DeckData.MeshDen - 1, DeckData.lhole[(int)DeckData.laytype[k] - 1]);
@@ -82,20 +84,12 @@ ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData)
         ZStruct.ZDelta.insert(ZStruct.ZDelta.end(), DeckData.MeshDen - 1, DeckData.delso[(int)DeckData.laytype[k] - 1]);
         ZStruct.ZKane.insert(ZStruct.ZKane.end(), DeckData.MeshDen - 1, DeckData.Ep[(int)DeckData.laytype[k] - 1]);
         ZStruct.ZBandGap.insert(ZStruct.ZBandGap.end(), DeckData.MeshDen - 1, DeckData.Eg[(int)DeckData.laytype[k] - 1]);
+        ZStruct.ZPermitivity.insert(ZStruct.ZPermitivity.end(), DeckData.MeshDen - 1, DeckData.Permitvity[(int)DeckData.laytype[k] - 1]);
         
+        //Initialize rho to zero
+        ZStruct.rho.insert(ZStruct.rho.end(), DeckData.MeshDen - 1, 0);
     }
 
-    //Optional Code to write ZGrid and layer stucture to a File
-    /**/
-    FILE* fpCBE = fopen("LayerStructure.txt", "w+");
-
-    for (int k = 0; k < ZStruct.CBand.size(); k++)
-    {
-        fprintf(fpCBE, "%f \t", ZStruct.CBand[k]);
-        fprintf(fpCBE, "%f \n", ZStruct.ZGridm[k] * 1E10);
-    }
-
-    fclose(fpCBE);
     
     /*
     FILE* fp = fopen("ZDopingCheck.txt", "w+");  

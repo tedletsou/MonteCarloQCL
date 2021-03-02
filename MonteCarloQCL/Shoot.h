@@ -17,4 +17,4 @@ struct WFStruct
 	int NumZeros;
 };
 
-WFStruct Shoot(double WfEnergy, ZMaterialParmsStruct ZStruct, std::vector<double> Potential);
+WFStruct Shoot(double WfEnergy, ZMaterialParmsStruct ZStruct);

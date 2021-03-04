@@ -57,7 +57,12 @@ int main()
 		//Calculate initial Fermilevel, Carrier Density in each subband and total charge density along Z (rho), returns only rho 
 		std::vector<double> rho = CalcInitCarrierDensity(IonizedDopantDensity, ZMaterialStruct, WaveFunctions, EigenEnergies, TL);
 
-		//Optional Code to write ZGrid and layer stucture to a File
+		//Poisson Solver Iterates to find no Change in Charge Density
+		// !!!!!!!!!!!!!!!!! Hard Coded Error Tolerance for the Potential Convergence
+		double ErrorTol = 1e-3;
+		PoissonResult PResult = PoissonSolver(ZMaterialStruct, IonizedDopantDensity, rho, WaveFunctions, TL, ErrorTol, DeckInput.field_vals[AppEindexa]);
+
+		//Optional Code to write EigenEnergies and Wavefunctions
 
 		FILE* fpWF = fopen("WaveFunctions.txt", "w+");
 
@@ -80,17 +85,38 @@ int main()
 		fclose(fpWF);
 
 
-		//Optional Code to write ZGrid and layer stucture to a File
-
+		//Optional Code to write Potential without Poisson Effect
 		FILE* fpCBE = fopen("Potential.txt", "w+");
 
 		for (int k = 0; k < ZMaterialStruct.Potential.size(); k++)
 		{
 			fprintf(fpCBE, "%f \t", ZMaterialStruct.Potential[k]);
-			fprintf(fpCBE, "%f \n", ZMaterialStruct.ZGridm[k]);
+			fprintf(fpCBE, "%f \n", ZMaterialStruct.ZGridm[k]*1e10);
 		}
 
 		fclose(fpCBE);
+
+		//Optional Code to write Potential with Poisson Effect
+		FILE* fpPB = fopen("PotentialBend.txt", "w+");
+
+		for (int k = 0; k < PResult.NewZStruct.Potential.size(); k++)
+		{
+			fprintf(fpPB, "%f \t", PResult.NewZStruct.Potential[k]);
+			fprintf(fpPB, "%f \n", PResult.NewZStruct.ZGridm[k] * 1e10);
+		}
+
+		fclose(fpPB);
+
+		//Optional Code to write rho
+		FILE* fpRoe = fopen("Rho.txt", "w+");
+
+		for (int k = 0; k < rho.size(); k++)
+		{
+			fprintf(fpRoe, "%f \t", rho[k]);
+			fprintf(fpRoe, "%f \n", PResult.NewZStruct.ZGridm[k] * 1e10);
+		}
+
+		fclose(fpRoe);
 			
 	};
 

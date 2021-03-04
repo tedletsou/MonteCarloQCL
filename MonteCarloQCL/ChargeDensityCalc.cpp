@@ -263,9 +263,3 @@ std::vector<double> CalcInitCarrierDensity(ChargeDistSturct IonizedDopantDensity
     return(rho);
 }
 
-
-
-
-    
- 
-

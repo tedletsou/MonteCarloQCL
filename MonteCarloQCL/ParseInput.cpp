@@ -15,7 +15,7 @@ DeckDataStuct Parse(std::string fname) {
     std::string str3("laytype");
     std::string str4("modthick");
     std::string str5("field_vals");
-    std::string str6("MeshDen");
+    std::string str6("meshden");
     std::string str7("a_lat");
     std::string str8("mstar_bar");
     std::string str9("mstar_well");

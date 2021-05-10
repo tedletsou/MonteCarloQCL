@@ -82,6 +82,8 @@ PoissonResult PoissonSolver(ZMaterialParmsStruct OldZStruct, ChargeDistSturct Io
 	int counter = 0;
 	double Error=0;
 	
+	struct PoissonResult Result;
+
 	//Use Initial calculation of rho in Zsturt
 	OldZStruct.rho = InitRho;
 
@@ -131,13 +133,13 @@ PoissonResult PoissonSolver(ZMaterialParmsStruct OldZStruct, ChargeDistSturct Io
 
 		//For Debug write Counter
 		std::cout << "Counter: " << counter << "  Error: " << Error << std::endl;
+
+		Result.NewWaveFunctions = NewWaveFunctions;
+		Result.NewZStruct = NewZStruct;
+		Result.EigenEnergies = NewEigenEnergies;
 	}
 	while (Error > ErrorTol);
 	
-	struct PoissonResult Result;
-	Result.NewWaveFunctions = NewWaveFunctions;
-	Result.NewZStruct = NewZStruct;
-
 	return(Result);
 	
 };

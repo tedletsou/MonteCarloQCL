@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -156,11 +156,15 @@
     <ClCompile Include="ChargeDensityCalc.cpp" />
     <ClCompile Include="EffectiveMass.cpp" />
     <ClCompile Include="EigenEnergyCalc.cpp" />
+    <ClCompile Include="FormFactorCalc.cpp" />
     <ClCompile Include="GenerateZSpace.cpp" />
+    <ClCompile Include="KGridSet.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ParseInput.cpp" />
+    <ClCompile Include="PhononPop.cpp" />
     <ClCompile Include="PoissonSolver.cpp" />
     <ClCompile Include="QCLMath.cpp" />
+    <ClCompile Include="ScatteringRateCalc.cpp" />
     <ClCompile Include="Shoot.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,11 +173,15 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="EffectiveMass.h" />
     <ClInclude Include="EigenEnergyCalc.h" />
+    <ClInclude Include="FormFactorCalc.h" />
     <ClInclude Include="GenerateZSpace.h" />
     <ClInclude Include="CalcWaveFunction.h" />
+    <ClInclude Include="KGridSet.h" />
     <ClInclude Include="ParseInput.h" />
+    <ClInclude Include="PhononPop.h" />
     <ClInclude Include="PoissonSolver.h" />
     <ClInclude Include="QCLMath.h" />
+    <ClInclude Include="ScattertingRateCalc.h" />
     <ClInclude Include="Shoot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

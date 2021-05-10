@@ -58,6 +58,7 @@ WFStruct Shoot(double WfEnergy, ZMaterialParmsStruct ZStruct)
         NumZero += int(signbit(F[n]) ^ signbit(F[n + 1]));
     }
 
+    F.push_back(F.back());
     
     Result.Wavefunction = F;
     Result.NumZeros = NumZero;

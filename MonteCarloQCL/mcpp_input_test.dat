@@ -1,7 +1,7 @@
 // Monte-Carlo code (C++) input deck 
 
 // Total number of modules
-nummod 10
+nummod 2
 
 // Barrier and well materials
 barrier ('InAlAs', 'mole_fraction_of_first_listed', 0.52, 'temperature', 300)
@@ -24,7 +24,6 @@ laythick 5.794489e+00
 laythick 1.261154e+01	
 laythick 8.180455e+00	
 laythick 1.192983e+01	
-laythick 1.295239e+01	
 
 // Doping values in one module (in cm^-3)
 laydop 0
@@ -40,7 +39,6 @@ laydop 0
 laydop 0
 laydop 0
 laydop 0
-laydop 221000000000000000
 laydop 221000000000000000
 laydop 0
 laydop 0
@@ -62,16 +60,15 @@ laytype 1
 laytype 2
 laytype 1
 laytype 2
-laytype 1
 
 // Total thickness of one module (in monolayers)
-modthick 1.656542e+02
+modthick 1.527018e+02
 
 // Applied fields (in V/m)
 field_vals -6e6
 
 // Grid meshing density
-meshden 100
+MeshDen 100
 
 // Lattive constant (in angstroms)
 a_lat 5.867644e+00
@@ -101,8 +98,8 @@ delso_bar 2.997600e-01
 delso_well 3.296050e-01
 
 // Kane energies (derived from band edge, eV)
-Ep_bar 1.615350e+01
-Ep_well 2.092852e+01
+Ep_bar 2.045898e+01
+Ep_well 2.008835e+01
 
 // Band gaps, eV
 Eg_bar 1.529640e+00
@@ -111,4 +108,3 @@ Eg_well 8.161193e-01
 // Relatvity Permitivity, unitless
 Perm_bar 9.7e+00
 Perm_well 1.15e+01
-

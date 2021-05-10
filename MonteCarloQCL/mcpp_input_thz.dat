@@ -1,0 +1,77 @@
+// Monte-Carlo code (C++) input deck 
+
+// Total number of modules
+nummod 10
+
+// Barrier and well materials
+barrier ('AlGaAs', 'mole_fraction_of_first_listed', 0.3, 'temperature', 300)
+well ('GaAs', 'mole_fraction_of_first_listed', 1, 'temperature', 300)
+
+// Layer thicknesses in one module (in monolayers)
+laythick 1.148672e+01	
+laythick 2.454137e+01	
+laythick 6.373938e+00	
+laythick 4.938950e+01	
+
+
+// Doping values in one module (in cm^-3)
+laydop 0
+laydop 0
+laydop 0
+laydop 150000000000000000
+
+
+// Type of each layer (1: barrier, 2: well)
+laytype 1
+laytype 2
+laytype 1
+laytype 2
+
+// Total thickness of one module (in monolayers)
+modthick 9.179153e+01
+
+// Applied fields (in V/m)
+field_vals -3.48e6
+
+// Grid meshing density
+meshden 100
+
+// Lattive constant (in angstroms)
+a_lat 5.655605e+00
+
+// Effective masses (relative to m0)
+mstar_bar 9.190000e-02
+mstar_well 6.700000e-02
+
+// Conduction band energies (relative to conduction band of well, eV)
+cband_bar 3.030480e-01
+cband_well 0
+
+// Valence band energies (relative to conduction band well, eV)
+vband_bar -1.943145e+00
+vband_well -1.266245e+00
+
+// Light hole band energies (relative to conduction band well, eV)
+lhole_bar -1.210631e+00
+lhole_well -1.047779e+00
+
+// Split-off band energies (relative to conduction band well, eV)
+sploff_bar -1.869691e+00
+sploff_well -1.703178e+00
+
+// Delta split-off energies, eV
+delso_bar 3.227000e-01
+delso_well 3.410000e-01
+
+// Kane energies (derived from band edge, eV)
+Ep_bar 1.492729e+01
+Ep_well 1.793960e+01
+
+// Band gaps, eV
+Eg_bar 2.177170e+00
+Eg_well 1.519000e+00
+
+
+// Relatvity Permitivity, unitless
+Perm_bar 1.204e+01
+Perm_well 1.29e+01

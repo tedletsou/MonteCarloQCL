@@ -18,6 +18,7 @@
 struct PoissonResult {
 	std::vector<WFStruct> NewWaveFunctions;
 	ZMaterialParmsStruct NewZStruct;
+	std::vector<double> EigenEnergies;
 };
 
 ZMaterialParmsStruct CalcPotential(ZMaterialParmsStruct ZStruct, double AppliedField);

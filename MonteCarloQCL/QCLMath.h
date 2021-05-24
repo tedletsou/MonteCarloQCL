@@ -21,6 +21,17 @@ std::vector<double> operator*(const std::vector<double>& Vec, double& a);
 
 QCLMat operator*(const QCLMat& a, const QCLMat& b);
 
+//Fermi Distribution Function
+double FermiDist(double E, double u, double TL);
+
+//1D Convolution
+std::vector<double> Conv1D(std::vector<double> x, std::vector<double> h);
+
+//1D Sinc Function
+std::vector<double> Sinc1D(double Omega, int Length);
+
+//Upsampling with Linear Interpolation
+std::vector<double> UpSampleLin(std::vector<double> X, double UpFactor);
 
 #endif
 

@@ -58,8 +58,9 @@ int main()
 		//Find Initial Wavefunctions based on Calculated Eigen Energies
 		std::vector<WFStruct> WaveFunctions = CalculateWaveFunctions(EigenEnergies, ZMaterialStruct);
 
-		//Calculate initial Fermilevel, Carrier Density in each subband and total charge density along Z (rho), returns only rho 
+		//Calculate initial Fermilevel u, Carrier Density in each subband and total charge density along Z (rho), returns only rho 
 		std::vector<double> rho = CalcInitCarrierDensity(IonizedDopantDensity, ZMaterialStruct, WaveFunctions, EigenEnergies, TL);
+		double u = CalcFermiLevel(IonizedDopantDensity, ZMaterialStruct, WaveFunctions, EigenEnergies, TL);
 
 		//Poisson Solver Iterates to find no Change in Charge Density
 		// !!!!!!!!!!!!!!!!! Hard Coded Error Tolerance for the Potential Convergence
@@ -71,16 +72,112 @@ int main()
 			std::cout << "New Z STruct Size" << PResult.NewZStruct.CBand.size() << std::endl;
 		}
 
+		//Calculate LO Phonon Occupation number, retrun LO phonon energy, permitivities and occupation number
 		LOPhonStruct LOPhononParam = LOPhonGaAsOccupancy(TL);
 
 		//Number of points for the Phonon Momentum =, Numq
 		double Numq = 11;
 
+		//Calculate the Form Factors for each subband for LO Phonon Scattering
 		FormFactorStruct LOFF = FormFactorLOPhononCalc(PResult, LOPhononParam,Numq);
 
-		KGridStruct KGrid = CreateKSpaceGrid(101, PResult, DeckInput);
+		std::cout << std::endl;
+		std::cout << "Form Factor Calc Start" << std::endl;
 
-		ScatteringRateMatrix LOEmitScatRate = LOPhononEmitScatRate(LOFF, PResult, KGrid, LOPhononParam, TL);
+		//Calculate the Form Factors for each subband for EE Scattering
+		FormFactorEEStruct EEFF = FormFactorEECalc(PResult, Numq);
+
+		std::cout << std::endl;
+		std::cout << "Form Factor UpSample" << std::endl;
+
+		// Upsample the EE Scatttering Form Factors by factor of Upfactor
+		FormFactorEEStruct UpSampledEEFF = FormFactorUpSample(EEFF, 10);
+		
+		FILE* fpFFEE = fopen("FormFactorEEOriginal.txt", "w+");
+
+		fprintf(fpFFEE, "\n");
+
+		//Indexing over initial subband i
+		for (int i = 0; i < EEFF.FormFactor.size(); i++)
+		{
+			//Indexing over final subband f
+			for (int f = 0; f < EEFF.FormFactor[0].size(); f++)
+			{
+				//Indexing over final subband f
+				for (int g = 0; g < EEFF.FormFactor[0][0].size(); g++)
+				{
+					//Indexing over final subband f
+					for (int H = 0; H < EEFF.FormFactor[0][0][0].size(); H++)
+					{
+						//Indexing over magnitude of ki	
+						for (int n = 0; n < EEFF.FormFactor[0][0][0][0].size(); n++)
+						{
+							fprintf(fpFFEE, "%d \t", i);
+							fprintf(fpFFEE, "%d \t", f);
+							fprintf(fpFFEE, "%d \t", g);
+							fprintf(fpFFEE, "%d \t", H);
+							fprintf(fpFFEE, "%.6g \t", EEFF.qvals[n]);
+							fprintf(fpFFEE, "%.6g \t", EEFF.FormFactor[i][f][g][H][n]);
+							fprintf(fpFFEE, "\n");
+						}
+					}
+				}
+			}
+		}
+
+		fclose(fpFFEE);
+
+		FILE* fpFFEEUP = fopen("FormFactorEEUpSampled.txt", "w+");
+
+		fprintf(fpFFEEUP, "\n");
+
+		//Indexing over initial subband i
+		for (int i = 0; i < UpSampledEEFF.FormFactor.size(); i++)
+		{
+			//Indexing over final subband f
+			for (int f = 0; f < UpSampledEEFF.FormFactor[0].size(); f++)
+			{
+				//Indexing over final subband f
+				for (int g = 0; g < UpSampledEEFF.FormFactor[0][0].size(); g++)
+				{
+					//Indexing over final subband f
+					for (int H = 0; H < UpSampledEEFF.FormFactor[0][0][0].size(); H++)
+					{
+						//Indexing over magnitude of ki	
+						for (int n = 0; n < UpSampledEEFF.FormFactor[0][0][0][0].size(); n++)
+						{
+							fprintf(fpFFEEUP, "%d \t", i);
+							fprintf(fpFFEEUP, "%d \t", f);
+							fprintf(fpFFEEUP, "%d \t", g);
+							fprintf(fpFFEEUP, "%d \t", H);
+							fprintf(fpFFEEUP, "%.6g \t", UpSampledEEFF.qvals[n]);
+							fprintf(fpFFEEUP, "%.6g \t", UpSampledEEFF.FormFactor[i][f][g][H][n]);
+							fprintf(fpFFEEUP, "\n");
+						}
+					}
+				}
+			}
+		}
+
+		fclose(fpFFEEUP);
+
+
+
+		//Create Grid in K-Space, Kx, Ky, Kmag, Max K-Value is determined from Emax the engergy differnce from bottom to top of well
+
+		KGridStruct KGrid = CreateKSpaceGrid(21, PResult, DeckInput);
+
+		//Calculate LO Phonon Emission Scattering Rate in terms of Ki, i and f, the initial k-vector magnitude Ki, the initial subband i, the final subband f  
+		ScatteringRateMatrix LOEmitScatRate = LOPhononEmitScatRateCalc(LOFF, PResult, KGrid, LOPhononParam, TL);
+
+		//Calculate LO Phonon Absorption Scattering Rate in terms of Ki, i and f, the initial k-vector magnitude Ki, the initial subband i, the final subband f
+		ScatteringRateMatrix LOAbsScatRate = LOPhononAbsScatRateCalc(LOFF, PResult, KGrid, LOPhononParam, TL);
+
+		std::cout << std::endl << "Start your Engines!!" << std::endl;
+
+		//Calculate EE Scattering Rate in terms of Ki, i and f, the initial k-vector magnitude Ki, the initial subband i, the final subband f
+		ScatteringRateMatrix EEScatRate = EEScatRateCalc(UpSampledEEFF, PResult, KGrid, TL, Numq);
+
 
 
 		/* Use to Bypass Poisson Solver and comment out Poissson Solver Call
@@ -147,9 +244,7 @@ int main()
 		fclose(fpRoe);
 
 		FILE* fpSC = fopen("ScatteringRateLOEmission.txt", "w+");
-
 		fprintf(fpSC, "\n");
-
 		//Indexing over initial subband i
 		for (int i = 0; i < LOEmitScatRate.size(); i++)
 		{
@@ -169,8 +264,33 @@ int main()
 			}
 
 		}
-
 		fclose(fpSC);
+				
+
+		FILE* fpSA = fopen("ScatteringRateLOAbsorb.txt", "w+");
+		fprintf(fpSA, "\n");
+		//Indexing over initial subband i
+		for (int i = 0; i < LOAbsScatRate.size(); i++)
+		{
+			//Indexing over final subband f
+			for (int f = 0; f < LOAbsScatRate[0].size(); f++)
+			{
+				//Indexing over magnitude of ki	
+				for (int n = 0; n < LOAbsScatRate[0][0].size(); n++)
+				{
+					fprintf(fpSA, "%d \t", i);
+					fprintf(fpSA, "%d \t", f);
+					fprintf(fpSA, "%.6g \t", KGrid.KMagVec[n]);
+					fprintf(fpSA, "%.6g \t", LOAbsScatRate[i][f][n]);
+					fprintf(fpSA, "\n");
+				}
+
+			}
+
+		}
+		fclose(fpSA);
+
+		
 
 		FILE* fpFF = fopen("FormFactorLOPhonon.txt", "w+");
 
@@ -197,7 +317,7 @@ int main()
 		}
 
 		fclose(fpFF);
-
+		
 		/*
 		//Print out K Grid Values
 		std::cout << std::endl << "KSpace Grid Kx  " << std::endl;

@@ -27,7 +27,7 @@ struct FermiSolverParams
 	double Nstot;
 };
 
-// Function used by fsolver to calculate the fermi level, the function returs the sheet density for the subband Engergies in params
+// Function used by fsolver to calculate the fermi level, the function returs the sheet density for the subband Energies in params
 double FermiLevel2DSheetDensity(double u, void* params);
 
 // Calculated using Boltzman Distribution
@@ -35,5 +35,9 @@ ChargeDistSturct  CalcInitDopantDensity(ZMaterialParmsStruct ZStruct, double TL)
 
 // Calculation using Thermal distibution of 2D sheet density with subband energies
 std::vector<double> CalcInitCarrierDensity(ChargeDistSturct IonizedDopantDensity, ZMaterialParmsStruct ZStruct, std::vector<WFStruct> WaveFunctions, std::vector<double> EigenEnergies, double TL);
+
+// Function used by fsolver to calculate the fermi level
+double CalcFermiLevel(ChargeDistSturct IonizedDopantDensity, ZMaterialParmsStruct ZStruct, std::vector<WFStruct> WaveFunctions, std::vector<double> EigenEnergies, double TL);
+
 
 #endif

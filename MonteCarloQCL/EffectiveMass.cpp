@@ -22,8 +22,70 @@ std::vector<double> CalcEffectiveMass(double EnergyWF,ZMaterialParmsStruct ZStru
 	return(Ms);
 }
 
-std::vector<double> CalcWeightedEffectiveMass(ZMaterialParmsStruct ZStruct, std::vector<WFStruct> Wavefunctions, std::vector<double> EigenEnergy)
+double CalcAverageEffectiveMass(ZMaterialParmsStruct ZStruct, WFStruct Wavefunction, double Ei)
 {
+	//Calculates an effectice mass based on Non-Parabolicity, Follows "Modeling Techniques for Quantum Cascade Lasers" approach to non-parabolicty
+	//Effective mass ms
+	double msE=0;
+	
+	//Integrate over Z: this integral: ms*(1 + 2*alpha+beta)(Ei-V(z)) * Wavefunction(z) * Wavefunction(z)*DZ
+	//Delta Z
+	double DZ;
+
+	//Independent variable of integration Z
+	std::vector<double> Z = ZStruct.ZGridm;
+
+	//Indexing over z
+	for (int m = 0; m < ZStruct.ZGrid.size(); m++)
+	{
+		// Delta Z used for integration
+		DZ = Z[m + 1] - Z[m];
+
+		msE += ZStruct.ZMass[m] * (1 + (2 * ZStruct.ZAlphaNp[m] + ZStruct.ZBetaNp[m]) * (Ei - ZStruct.Potential[m])) * Wavefunction.Wavefunction[m] * Wavefunction.Wavefunction[m] * DZ;
+	}
+
+	return msE;
+}
+
+
+std::vector<double> CalcAllEffectiveMass(ZMaterialParmsStruct ZStruct, std::vector<WFStruct> Wavefunctions, std::vector<double> EigenEnergy)
+{
+	
+	//Calculates the Effective Mass for the bottom of each subband, returns a vector of masses
+
+	//Effective Mass vector m* initialized to 0
+	std::vector<double> ms(Wavefunctions.size(), 0);
+
+	//Integrate over Z: this integral: ms*(1 + 2*alpha+beta)(Ei-V(z)) * Wavefunction(z) * Wavefunction(z)*DZ
+	//Delta Z
+	double DZ;
+
+	//Independent variable of integration Z
+	std::vector<double> Z = ZStruct.ZGridm;
+
+	for (int n = 0; n < Wavefunctions.size(); n++)
+	{
+		//Indexing over z
+		for (int m = 0; m < ZStruct.ZGrid.size(); m++)
+		{
+			// Delta Z used for integration
+			DZ = Z[m + 1] - Z[m];
+
+			ms[n] += ZStruct.ZMass[m] * (1 + (2 * ZStruct.ZAlphaNp[m] + ZStruct.ZBetaNp[m]) * (EigenEnergy[n] - ZStruct.Potential[m])) * Wavefunctions[n].Wavefunction[m] * Wavefunctions[n].Wavefunction[m] * DZ;
+		}
+	}
+
+	std::cout << std::endl;
+	std::cout << "Effective Mass Printout"<< std::endl;
+	for (int n = 0; n < EigenEnergy.size(); n++)
+	{
+		std::cout << "Band: " << n << "  ms: " << ms[n] << std::endl;
+	}
+
+	return(ms);
+	
+	//Original Function
+	/*
 	//Effective Mass vector m* initialized to 0
 	std::vector<double> ms(EigenEnergy.size(),0);
 
@@ -44,4 +106,6 @@ std::vector<double> CalcWeightedEffectiveMass(ZMaterialParmsStruct ZStruct, std:
 	}
 
 	return(ms);
+
+	*/
 }

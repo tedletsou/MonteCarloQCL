@@ -82,6 +82,9 @@ PoissonResult PoissonSolver(ZMaterialParmsStruct OldZStruct, ChargeDistSturct Io
 	int counter = 0;
 	double Error=0;
 	
+	//FermiLevel
+	double u;
+	
 	struct PoissonResult Result;
 
 	//Use Initial calculation of rho in Zsturt
@@ -123,6 +126,7 @@ PoissonResult PoissonSolver(ZMaterialParmsStruct OldZStruct, ChargeDistSturct Io
 
 		//Calculate an update for charge density based on New Wavefunctions
 		NewZStruct.rho = CalcInitCarrierDensity(IonizedDopantDensity, NewZStruct, NewWaveFunctions, NewEigenEnergies, TL);
+		u = CalcFermiLevel(IonizedDopantDensity, NewZStruct, NewWaveFunctions, NewEigenEnergies, TL);
 
 		//Calculate the RMS difference of the Old and New values of rho in OldZStruct and NewZStruct along Z
 		for (int k = 0; k < NewZStruct.rho.size(); k++)
@@ -137,6 +141,7 @@ PoissonResult PoissonSolver(ZMaterialParmsStruct OldZStruct, ChargeDistSturct Io
 		Result.NewWaveFunctions = NewWaveFunctions;
 		Result.NewZStruct = NewZStruct;
 		Result.EigenEnergies = NewEigenEnergies;
+		Result.u = u;
 	}
 	while (Error > ErrorTol);
 	

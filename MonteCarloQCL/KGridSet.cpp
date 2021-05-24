@@ -26,10 +26,7 @@ KGridStruct CreateKSpaceGrid(int KSize, PoissonResult PResult, DeckDataStuct Dec
 	double Emax = *MinMax.second - *MinMax.first;
 
 	//Calculate Effective mass at Emax, as an upper bound
-	std::vector<double> msz = CalcEffectiveMass(Emax, PResult.NewZStruct);
-
-	//Average over z, for the effective mass ms
-	double ms = std::accumulate(msz.begin(), msz.end(), 0.0) / msz.size();
+	double  ms = CalcAverageEffectiveMass(PResult.NewZStruct, PResult.NewWaveFunctions.back(),Emax);
 
 	//KMax is found using parabolic band
 	double Kmax = sqrt(Emax * 2 * ms * ec) / hbar;
@@ -43,8 +40,8 @@ KGridStruct CreateKSpaceGrid(int KSize, PoissonResult PResult, DeckDataStuct Dec
 	{
 		for (int m = 0; m < KSize; m++)
 		{
-			KGridKx[n][m] = double(m) / double(KSize-1) * 2 * Kmax - Kmax;
-			KGridKy[n][m] = double(n) / double(KSize-1) * 2 * Kmax - Kmax;
+			KGridKx[n][m] = double(m) / double(KSize-1) * 2 * Kmax/sqrt(2) - Kmax / sqrt(2);
+			KGridKy[n][m] = double(n) / double(KSize-1) * 2 * Kmax / sqrt(2) - Kmax / sqrt(2);
 			KGridKMag[n][m] = sqrt(KGridKx[n][m]* KGridKx[n][m]+ KGridKy[n][m] * KGridKy[n][m]);
 		};
 	};

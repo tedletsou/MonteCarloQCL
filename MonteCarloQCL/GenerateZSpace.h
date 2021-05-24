@@ -38,6 +38,10 @@ struct ZMaterialParmsStruct {
 	std::vector<double> ZDoping;
 	// Doping along Z
 	std::vector<double> ZPermitivity;
+	// Non Parabolicity coefficient alpha, from "Modeling Techniques for Quantum Cascade Lasers"
+	std::vector<double> ZAlphaNp;
+	// Non Parabolicity coefficient beta, from "Modeling Techniques for Quantum Cascade Lasers"
+	std::vector<double> ZBetaNp;
 };
 
 // Define create zparams function

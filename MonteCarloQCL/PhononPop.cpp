@@ -1,6 +1,8 @@
 #include <cmath>
 #include "PhononPop.h"
 #include "Constants.h"
+#include <iostream>
+
 
 LOPhonStruct LOPhonGaAsOccupancy(double TL)
 {
@@ -15,7 +17,9 @@ LOPhonStruct LOPhonGaAsOccupancy(double TL)
 	GaAsLOPhon.Eps = 12.9;
 
 	//Occupancy of the Phonon LO phonon mode, given by Bose-Einstien Distribution
-	GaAsLOPhon.NLO = 1 / exp(GaAsLOPhon.ELO / (kb * TL));
+	GaAsLOPhon.NLO = 1 / (exp(GaAsLOPhon.ELO*ec / (kb * TL))-1);
+
+	//std::cout << "NLO: " << GaAsLOPhon.NLO << std::endl;
 
 	return GaAsLOPhon;
 }

@@ -78,6 +78,8 @@ ZMaterialParmsStruct CreateZParams(DeckDataStuct DeckData)
         ZStruct.CBand.insert(ZStruct.CBand.end(), DeckData.MeshDen -1, DeckData.cband[(int)DeckData.laytype[k]-1 ]);
         ZStruct.Potential.insert(ZStruct.Potential.end(), DeckData.MeshDen - 1, DeckData.cband[(int)DeckData.laytype[k] - 1]);
         ZStruct.ZMass.insert(ZStruct.ZMass.end(), DeckData.MeshDen - 1, DeckData.mstar[(int)DeckData.laytype[k] - 1] * me);
+        ZStruct.ZAlphaNp.insert(ZStruct.ZAlphaNp.end(), DeckData.MeshDen - 1, DeckData.alphaNP[(int)DeckData.laytype[k] - 1]);
+        ZStruct.ZBetaNp.insert(ZStruct.ZBetaNp.end(), DeckData.MeshDen - 1, DeckData.betaNP[(int)DeckData.laytype[k] - 1]);
         ZStruct.ZVBand.insert(ZStruct.ZVBand.end(), DeckData.MeshDen - 1, DeckData.vband[(int)DeckData.laytype[k] - 1]);
         ZStruct.ZLHole.insert(ZStruct.ZLHole.end(), DeckData.MeshDen - 1, DeckData.lhole[(int)DeckData.laytype[k] - 1]);
         ZStruct.ZSploff.insert(ZStruct.ZSploff.end(), DeckData.MeshDen -1, DeckData.sploff[(int)DeckData.laytype[k] - 1]);

@@ -75,3 +75,13 @@ Eg_well 1.519000e+00
 // Relatvity Permitivity, unitless
 Perm_bar 1.204e+01
 Perm_well 1.29e+01
+
+
+// Alpha Non Parabolicity Term, 1/eV for Al0.3Ga0.7As
+AlphaNP_bar 6.42e-1
+AlphaNP_well 7.24e-1
+
+
+// Beta Non Parabolicity Term, 1/eV for Al0.3Ga0.7As
+BetaNP_bar 6.97e-1
+BetaNP_well 9.85e-1

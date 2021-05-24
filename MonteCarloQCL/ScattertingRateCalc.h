@@ -8,6 +8,11 @@
 
 typedef std::vector<std::vector<std::vector<double>>> ScatteringRateMatrix;
 
-ScatteringRateMatrix LOPhononEmitScatRate(FormFactorStruct LOPhononFF, PoissonResult PResult, KGridStruct KGrid, LOPhonStruct LOPhononParam, double TL);
+typedef std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>> ScatteringRateEEMatrix;
 
+ScatteringRateMatrix LOPhononEmitScatRateCalc(FormFactorStruct LOPhononFF, PoissonResult PResult, KGridStruct KGrid, LOPhonStruct LOPhononParam, double TL);
+
+ScatteringRateMatrix LOPhononAbsScatRateCalc(FormFactorStruct LOPhononFF, PoissonResult PResult, KGridStruct KGrid, LOPhonStruct LOPhononParam, double TL);
+
+ScatteringRateMatrix EEScatRateCalc(FormFactorEEStruct EEFF, PoissonResult PResult, KGridStruct KGrid, double TL, int Numq);
 

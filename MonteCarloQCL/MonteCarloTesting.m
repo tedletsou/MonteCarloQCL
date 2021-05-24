@@ -44,31 +44,87 @@ opts.EmptyLineRule = "read";
 opts = setvaropts(opts, "VarName15", "WhitespaceRule", "preserve");
 opts = setvaropts(opts, "VarName15", "EmptyFieldRule", "auto");
 
-% Import the data
+% Import the LO Phonon Emission RAte
 tbl = readtable("C:\Users\andre\source\repos\MonteCarloQCL\MonteCarloQCL\ScatteringRateLOEmission.txt", opts);
+
+% Import the LO Phonon Absoprtion RAte
+tb2 = readtable("C:\Users\andre\source\repos\MonteCarloQCL\MonteCarloQCL\ScatteringRateLOAbsorb.txt", opts);
+
+clear opts
+
+% Change opts to import EE Form Factor
+opts = delimitedTextImportOptions("NumVariables", 6);
+
+% Specify range and delimiter
+opts.DataLines = [2, Inf];
+opts.Delimiter = " \t";
+
+% Specify column names and types
+opts.VariableNames = ["i", "f", "g", "H", "qx", "FFx"];
+opts.VariableTypes = ["double", "double", "double", "double", "double", "double"];
+
+% Specify file level properties
+opts.ExtraColumnsRule = "ignore";
+opts.EmptyLineRule = "read";
+
+% Import the EE Form Factor Original UpSampled
+tb3 = readtable("C:\Users\andre\source\repos\MonteCarloQCL\MonteCarloQCL\FormFactorEEOriginal.txt", opts);
+
+clear opts
+
+% Change opts to import EE Form Factor
+opts = delimitedTextImportOptions("NumVariables", 6);
+
+% Specify range and delimiter
+opts.DataLines = [2, Inf];
+opts.Delimiter = " \t";
+
+% Specify column names and types
+opts.VariableNames = ["i", "f", "g", "H", "qx", "FFx"];
+opts.VariableTypes = ["double", "double", "double", "double", "double", "double"];
+
+% Specify file level properties
+opts.ExtraColumnsRule = "ignore";
+opts.EmptyLineRule = "read";
+
+% Import the EE Form Factor Original UpSampled
+tb4 = readtable("C:\Users\andre\source\repos\MonteCarloQCL\MonteCarloQCL\FormFactorEEUpSampled.txt", opts);
 
 %% Convert to output type
 VarName10 = tbl.VarName10;
 VarName11 = tbl.VarName11;
-Kix = tbl.Kix;
-Ratex = tbl.Ratex;
+KiE = tbl.Kix;
+RateE = tbl.Ratex;
 VarName15 = tbl.VarName15;
 
-size(Kix)
+KiA = tb2.Kix;
+RateA = tb2.Ratex;
 
-NumK=length(Kix)/(NumEigenStates^2)
+NumK=length(KiE)/(NumEigenStates^2);
+
+
+
+Qvec = tb3.qx;
+FFEEvec = tb3.FFx;
+
+NumQ=length(Qvec)/(NumEigenStates^4)
+
+QvecUp = tb4.qx;
+FFEEUpvec = tb4.FFx;
+
+NumQUp=length(QvecUp)/(NumEigenStates^4)
 
 for n=1:NumEigenStates
     for m=1:NumEigenStates
         for a=1:NumK
-            RateMatSpline(n,m,a)=RateSpline((n-1)*NumK*NumEigenStates+(m-1)*NumK+a);
+            RateMatEmit(n,m,a)=RateE((n-1)*NumK*NumEigenStates+(m-1)*NumK+a);
         end
     end
 end
 for n=1:NumEigenStates
     for m=1:NumEigenStates
         for a=1:NumK
-            KiMatSpline(n,m,a)=KiSpline((n-1)*NumK*NumEigenStates+(m-1)*NumK+a);
+            KiMatEmit(n,m,a)=KiE((n-1)*NumK*NumEigenStates+(m-1)*NumK+a);
         end
     end
 end
@@ -76,5 +132,89 @@ end
 figure
 hold on
 for n=1:6
-    plot(reshape((KiMatSpline(n,1,:)),1,[]),reshape((RateMatSpline(n,1,:)),1,[]),ColorPick2(n))
+    plot(reshape((KiMatEmit(n,1,:)),1,[]),reshape((RateMatEmit(n,1,:)),1,[]),ColorPick2(n))
 end
+
+for n=1:NumEigenStates
+    for m=1:NumEigenStates
+        for a=1:NumK
+            RateMatAbs(n,m,a)=RateA((n-1)*NumK*NumEigenStates+(m-1)*NumK+a);
+        end
+    end
+end
+for n=1:NumEigenStates
+    for m=1:NumEigenStates
+        for a=1:NumK
+            KiMatAbs(n,m,a)=KiA((n-1)*NumK*NumEigenStates+(m-1)*NumK+a);
+        end
+    end
+end
+
+figure
+hold on
+for n=1:6
+    plot(reshape((KiMatAbs(n,1,:)),1,[]),reshape((RateMatAbs(n,1,:)),1,[]),ColorPick2(n))
+end
+
+for n=1:NumEigenStates
+    for m=1:NumEigenStates
+        for a=1:NumEigenStates
+            for b=1:NumEigenStates
+                for c=1:NumQ
+                    FFEE(n,m,a,b,c)=FFEEvec((n-1)*NumQ*NumEigenStates^3+(m-1)*NumQ*NumEigenStates^2+(a-1)*NumQ*NumEigenStates+(b-1)*NumQ+c);
+                end
+            end
+        end
+    end
+end
+
+for n=1:NumEigenStates
+    for m=1:NumEigenStates
+        for a=1:NumEigenStates
+            for b=1:NumEigenStates
+                for c=1:NumQ
+                    qEE(n,m,a,b,c)=Qvec((n-1)*NumQ*NumEigenStates^3+(m-1)*NumQ*NumEigenStates^2+(a-1)*NumQ*NumEigenStates+(b-1)*NumQ+c);
+                end
+            end
+        end
+    end
+end
+
+figure
+hold on
+for n=1:1
+    plot(reshape((qEE(n,1,1,2,:)),1,[]),(reshape((FFEE(n,1,1,2,:)),1,[])),strcat(ColorPick2(n),'o'))
+end
+%axis([1e9 3e9 0 1e-20])
+
+
+for n=1:NumEigenStates
+    for m=1:NumEigenStates
+        for a=1:NumEigenStates
+            for b=1:NumEigenStates
+                for c=1:NumQUp
+                    FFEEUp(n,m,a,b,c)=FFEEUpvec((n-1)*NumQUp*NumEigenStates^3+(m-1)*NumQUp*NumEigenStates^2+(a-1)*NumQUp*NumEigenStates+(b-1)*NumQUp+c);
+                end
+            end
+        end
+    end
+end
+
+for n=1:NumEigenStates
+    for m=1:NumEigenStates
+        for a=1:NumEigenStates
+            for b=1:NumEigenStates
+                for c=1:NumQUp
+                    qEEUp(n,m,a,b,c)=QvecUp((n-1)*NumQUp*NumEigenStates^3+(m-1)*NumQUp*NumEigenStates^2+(a-1)*NumQUp*NumEigenStates+(b-1)*NumQUp+c);
+                end
+            end
+        end
+    end
+end
+
+figure
+hold on
+for n=1:1
+    plot(reshape((qEEUp(n,1,1,2,:)),1,[]),(reshape(FFEEUp(n,1,1,2,:),1,[])),strcat(ColorPick2(n),'o'))
+end
+%axis([1e9 3e9 0 1e-20])

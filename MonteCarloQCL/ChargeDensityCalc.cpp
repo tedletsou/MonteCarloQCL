@@ -132,7 +132,7 @@ std::vector<double> CalcInitCarrierDensity(ChargeDistSturct IonizedDopantDensity
     double FermiLevelHigh = EigenEnergies.back() + FermiTolerance * 10.0 ;
     
     //Calculate Effective Mass for all EigenEnergies
-    std::vector<double> ms = CalcWeightedEffectiveMass(ZStruct, WaveFunctions, EigenEnergies);
+    std::vector<double> ms = CalcAllEffectiveMass(ZStruct, WaveFunctions, EigenEnergies);
 
     //Struct used to contain parameters for the function ShootRoot
     FermiSolverParams FermiLevelParams{EigenEnergies, TL, ms, Ns};
@@ -263,3 +263,101 @@ std::vector<double> CalcInitCarrierDensity(ChargeDistSturct IonizedDopantDensity
     return(rho);
 }
 
+double CalcFermiLevel(ChargeDistSturct IonizedDopantDensity, ZMaterialParmsStruct ZStruct, std::vector<WFStruct> WaveFunctions, std::vector<double> EigenEnergies, double TL)
+{
+    //Calculates the fermi level based on Eigen Energies and Dopant Density 
+
+    // HARD CODED VALUE for tolerance in finding the Fermi Level
+    double FermiTolerance = 1e-5;
+
+    // Fermi level
+    double u;
+
+    //Charge Density along Z
+    std::vector<double> rho;
+
+    //Resize rho to length of Z grid
+    rho.resize(ZStruct.ZGrid.size());
+
+    //Electron Density along Z
+    std::vector<double> Nz;
+
+    //Resize Nz to length of Z grid
+    Nz.resize(ZStruct.ZGrid.size());
+
+    //Electron Sheet density for each subband
+    std::vector<double> Nes(EigenEnergies.size(), 0);
+
+    //Total Sheet Density for a single module equal to sum of Nes
+    double Ns = 0;
+
+    //Integrate the Dopant Density
+    //DeltaZ found from ZStruct
+    double DeltaZ;
+
+    for (int k = 0; k < IonizedDopantDensity.ChargeDistZ.size() - 1; k++)
+    {
+        DeltaZ = (ZStruct.ZGridm[k + 1] - ZStruct.ZGridm[k]);
+        Ns += DeltaZ * IonizedDopantDensity.ChargeDistZ[k];
+    }
+
+    //Find bounds for the Fermi Level using the lowest subband energy as the min and half way between the lowest and highest subband engergy as the max
+    double FermiLevelLow = -1; //EigenEnergies[0] - FermiTolerance * 10.0;
+    double FermiLevelHigh = EigenEnergies.back() + FermiTolerance * 10.0;
+
+    //Calculate Effective Mass for all EigenEnergies
+    std::vector<double> ms = CalcAllEffectiveMass(ZStruct, WaveFunctions, EigenEnergies);
+
+    //Struct used to contain parameters for the function ShootRoot
+    FermiSolverParams FermiLevelParams{ EigenEnergies, TL, ms, Ns };
+
+    //Updated bounds from FSolver used to calculate Solver Convergence
+    double ELow;
+    double EHigh;
+
+    //Calculate the Fermi Level using Fsolve from GSL library
+
+    //Temp Energy takes the intermediate value of Fsolve
+    double TemEnergy;
+
+    //Solver Status used to track when Solver has Converged
+    int SolverState;
+
+    //Pointers to fsolver object Solver and Function F
+    const gsl_root_fsolver_type* G;
+    gsl_root_fsolver* Solverr;
+    gsl_function H;
+
+
+    //Use the Brent-Dekker method of fsolver in GNU Scientific Library (GSL) Library
+    G = gsl_root_fsolver_brent;
+    Solverr = gsl_root_fsolver_alloc(G);
+
+    H.function = &FermiLevel2DSheetDensity;
+    H.params = &FermiLevelParams;
+
+    //Set Parameters for Fsolver with Energy Bounds for State k
+    gsl_root_fsolver_set(Solverr, &H, FermiLevelLow, FermiLevelHigh);
+
+    do
+    {
+        //Run FSolve and Check Convergence using gsl_root_test_interval
+        SolverState = gsl_root_fsolver_iterate(Solverr);
+        TemEnergy = gsl_root_fsolver_root(Solverr);
+        ELow = gsl_root_fsolver_x_lower(Solverr);
+        EHigh = gsl_root_fsolver_x_upper(Solverr);
+        SolverState = gsl_root_test_interval(ELow, EHigh, 0, FermiTolerance);
+
+        //Used to Debug convergence
+        //printf(" [%.12f, %.12f] %.12f \n", ELow, EHigh, TemEnergy);
+
+    } while (SolverState == GSL_CONTINUE);
+
+    // Calculated fermi level
+    u = TemEnergy;
+
+    //Free memory of fsolver
+    gsl_root_fsolver_free(Solverr);
+
+    return u;
+}

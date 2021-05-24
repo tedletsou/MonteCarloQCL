@@ -35,6 +35,10 @@ DeckDataStuct Parse(std::string fname) {
     std::string str23("Eg_well");
     std::string str24("Perm_bar");
     std::string str25("Perm_well");
+    std::string str26("AlphaNP_bar");
+    std::string str27("AlphaNP_well");
+    std::string str28("BetaNP_bar");
+    std::string str29("BetaNP_bar");
 
     // Load input file
     std::ifstream datafile(fname);
@@ -159,6 +163,20 @@ DeckDataStuct Parse(std::string fname) {
             getline(datafile, line, '\n');
             float val = stof(line);
             s.Permitvity.push_back(val);
+        }
+        // Alpha term fon Non-Parabolicity of barriers and well (1/eV)
+        else if (line.compare(str26) == 0 || line.compare(str27) == 0)
+        {
+        getline(datafile, line, '\n');
+        float val = stof(line);
+        s.alphaNP.push_back(val);
+        }
+        // Beta term fon Non-Parabolicity of barriers and well (1/eV)
+        else if (line.compare(str28) == 0 || line.compare(str29) == 0)
+        {
+        getline(datafile, line, '\n');
+        float val = stof(line);
+        s.betaNP.push_back(val);
         }
     }
 

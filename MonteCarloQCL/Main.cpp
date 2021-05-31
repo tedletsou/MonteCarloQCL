@@ -93,78 +93,7 @@ int main()
 		// Upsample the EE Scatttering Form Factors by factor of Upfactor
 		FormFactorEEStruct UpSampledEEFF = FormFactorUpSample(EEFF, 10);
 		
-		FILE* fpFFEE = fopen("FormFactorEEOriginal.txt", "w+");
-
-		fprintf(fpFFEE, "\n");
-
-		//Indexing over initial subband i
-		for (int i = 0; i < EEFF.FormFactor.size(); i++)
-		{
-			//Indexing over final subband f
-			for (int f = 0; f < EEFF.FormFactor[0].size(); f++)
-			{
-				//Indexing over final subband f
-				for (int g = 0; g < EEFF.FormFactor[0][0].size(); g++)
-				{
-					//Indexing over final subband f
-					for (int H = 0; H < EEFF.FormFactor[0][0][0].size(); H++)
-					{
-						//Indexing over magnitude of ki	
-						for (int n = 0; n < EEFF.FormFactor[0][0][0][0].size(); n++)
-						{
-							fprintf(fpFFEE, "%d \t", i);
-							fprintf(fpFFEE, "%d \t", f);
-							fprintf(fpFFEE, "%d \t", g);
-							fprintf(fpFFEE, "%d \t", H);
-							fprintf(fpFFEE, "%.6g \t", EEFF.qvals[n]);
-							fprintf(fpFFEE, "%.6g \t", EEFF.FormFactor[i][f][g][H][n]);
-							fprintf(fpFFEE, "\n");
-						}
-					}
-				}
-			}
-		}
-
-		fclose(fpFFEE);
-
-		FILE* fpFFEEUP = fopen("FormFactorEEUpSampled.txt", "w+");
-
-		fprintf(fpFFEEUP, "\n");
-
-		//Indexing over initial subband i
-		for (int i = 0; i < UpSampledEEFF.FormFactor.size(); i++)
-		{
-			//Indexing over final subband f
-			for (int f = 0; f < UpSampledEEFF.FormFactor[0].size(); f++)
-			{
-				//Indexing over final subband f
-				for (int g = 0; g < UpSampledEEFF.FormFactor[0][0].size(); g++)
-				{
-					//Indexing over final subband f
-					for (int H = 0; H < UpSampledEEFF.FormFactor[0][0][0].size(); H++)
-					{
-						//Indexing over magnitude of ki	
-						for (int n = 0; n < UpSampledEEFF.FormFactor[0][0][0][0].size(); n++)
-						{
-							fprintf(fpFFEEUP, "%d \t", i);
-							fprintf(fpFFEEUP, "%d \t", f);
-							fprintf(fpFFEEUP, "%d \t", g);
-							fprintf(fpFFEEUP, "%d \t", H);
-							fprintf(fpFFEEUP, "%.6g \t", UpSampledEEFF.qvals[n]);
-							fprintf(fpFFEEUP, "%.6g \t", UpSampledEEFF.FormFactor[i][f][g][H][n]);
-							fprintf(fpFFEEUP, "\n");
-						}
-					}
-				}
-			}
-		}
-
-		fclose(fpFFEEUP);
-
-
-
 		//Create Grid in K-Space, Kx, Ky, Kmag, Max K-Value is determined from Emax the engergy differnce from bottom to top of well
-
 		KGridStruct KGrid = CreateKSpaceGrid(21, PResult, DeckInput);
 
 		//Calculate LO Phonon Emission Scattering Rate in terms of Ki, i and f, the initial k-vector magnitude Ki, the initial subband i, the final subband f  
@@ -176,7 +105,7 @@ int main()
 		std::cout << std::endl << "Start your Engines!!" << std::endl;
 
 		//Calculate EE Scattering Rate in terms of Ki, i and f, the initial k-vector magnitude Ki, the initial subband i, the final subband f
-		ScatteringRateMatrix EEScatRate = EEScatRateCalc(UpSampledEEFF, PResult, KGrid, TL, Numq);
+		ScatteringRateEEMatrix EEScatRate = EEScatRateCalc(UpSampledEEFF, PResult, KGrid, TL, Numq);
 
 
 
@@ -243,55 +172,7 @@ int main()
 
 		fclose(fpRoe);
 
-		FILE* fpSC = fopen("ScatteringRateLOEmission.txt", "w+");
-		fprintf(fpSC, "\n");
-		//Indexing over initial subband i
-		for (int i = 0; i < LOEmitScatRate.size(); i++)
-		{
-			//Indexing over final subband f
-			for (int f = 0; f < LOEmitScatRate[0].size(); f++)
-			{
-				//Indexing over magnitude of ki	
-				for (int n = 0; n < LOEmitScatRate[0][0].size(); n++)
-				{
-					fprintf(fpSC, "%d \t", i);
-					fprintf(fpSC, "%d \t", f);
-					fprintf(fpSC, "%.6g \t", KGrid.KMagVec[n]);
-					fprintf(fpSC, "%.6g \t", LOEmitScatRate[i][f][n]);
-					fprintf(fpSC, "\n");
-				}
-
-			}
-
-		}
-		fclose(fpSC);
-				
-
-		FILE* fpSA = fopen("ScatteringRateLOAbsorb.txt", "w+");
-		fprintf(fpSA, "\n");
-		//Indexing over initial subband i
-		for (int i = 0; i < LOAbsScatRate.size(); i++)
-		{
-			//Indexing over final subband f
-			for (int f = 0; f < LOAbsScatRate[0].size(); f++)
-			{
-				//Indexing over magnitude of ki	
-				for (int n = 0; n < LOAbsScatRate[0][0].size(); n++)
-				{
-					fprintf(fpSA, "%d \t", i);
-					fprintf(fpSA, "%d \t", f);
-					fprintf(fpSA, "%.6g \t", KGrid.KMagVec[n]);
-					fprintf(fpSA, "%.6g \t", LOAbsScatRate[i][f][n]);
-					fprintf(fpSA, "\n");
-				}
-
-			}
-
-		}
-		fclose(fpSA);
-
-		
-
+		//Optional Code to write out LO Phonon Form Factor to file
 		FILE* fpFF = fopen("FormFactorLOPhonon.txt", "w+");
 
 		fprintf(fpFF, "\n");
@@ -315,8 +196,158 @@ int main()
 			}
 
 		}
-
 		fclose(fpFF);
+
+		//Optional Code to write out EE Form Factor to file
+		FILE* fpFFEE = fopen("FormFactorEEOriginal.txt", "w+");
+
+		fprintf(fpFFEE, "\n");
+
+		//Indexing over initial subband i
+		for (int i = 0; i < EEFF.FormFactor.size(); i++)
+		{
+			//Indexing over final subband f
+			for (int f = 0; f < EEFF.FormFactor[0].size(); f++)
+			{
+				//Indexing over final subband g
+				for (int g = 0; g < EEFF.FormFactor[0][0].size(); g++)
+				{
+					//Indexing over final subband H
+					for (int H = 0; H < EEFF.FormFactor[0][0][0].size(); H++)
+					{
+						//Indexing over magnitude of ki	
+						for (int n = 0; n < EEFF.FormFactor[0][0][0][0].size(); n++)
+						{
+							fprintf(fpFFEE, "%d \t", i);
+							fprintf(fpFFEE, "%d \t", f);
+							fprintf(fpFFEE, "%d \t", g);
+							fprintf(fpFFEE, "%d \t", H);
+							fprintf(fpFFEE, "%.6g \t", EEFF.qvals[n]);
+							fprintf(fpFFEE, "%.6g \t", EEFF.FormFactor[i][f][g][H][n]);
+							fprintf(fpFFEE, "\n");
+						}
+					}
+				}
+			}
+		}
+		fclose(fpFFEE);
+
+		//Optional Code to write out UpSampled EE Form Factor to file
+		FILE* fpFFEEUP = fopen("FormFactorEEUpSampled.txt", "w+");
+
+		fprintf(fpFFEEUP, "\n");
+
+		//Indexing over initial subband i
+		for (int i = 0; i < UpSampledEEFF.FormFactor.size(); i++)
+		{
+			//Indexing over final subband f
+			for (int f = 0; f < UpSampledEEFF.FormFactor[0].size(); f++)
+			{
+				//Indexing over final subband g
+				for (int g = 0; g < UpSampledEEFF.FormFactor[0][0].size(); g++)
+				{
+					//Indexing over final subband H
+					for (int H = 0; H < UpSampledEEFF.FormFactor[0][0][0].size(); H++)
+					{
+						//Indexing over magnitude of ki	
+						for (int n = 0; n < UpSampledEEFF.FormFactor[0][0][0][0].size(); n++)
+						{
+							fprintf(fpFFEEUP, "%d \t", i);
+							fprintf(fpFFEEUP, "%d \t", f);
+							fprintf(fpFFEEUP, "%d \t", g);
+							fprintf(fpFFEEUP, "%d \t", H);
+							fprintf(fpFFEEUP, "%.6g \t", UpSampledEEFF.qvals[n]);
+							fprintf(fpFFEEUP, "%.6g \t", UpSampledEEFF.FormFactor[i][f][g][H][n]);
+							fprintf(fpFFEEUP, "\n");
+						}
+					}
+				}
+			}
+		}
+		fclose(fpFFEEUP);
+
+		//Optional Code to write out LO Phonon Emission Rate to file
+		FILE* fpSC = fopen("ScatteringRateLOEmission.txt", "w+");
+		fprintf(fpSC, "\n");
+		//Indexing over initial subband i
+		for (int i = 0; i < LOEmitScatRate.size(); i++)
+		{
+			//Indexing over final subband f
+			for (int f = 0; f < LOEmitScatRate[0].size(); f++)
+			{
+				//Indexing over magnitude of ki	
+				for (int n = 0; n < LOEmitScatRate[0][0].size(); n++)
+				{
+					fprintf(fpSC, "%d \t", i);
+					fprintf(fpSC, "%d \t", f);
+					fprintf(fpSC, "%.6g \t", KGrid.KMagVec[n]);
+					fprintf(fpSC, "%.6g \t", LOEmitScatRate[i][f][n]);
+					fprintf(fpSC, "\n");
+				}
+
+			}
+
+		}
+		fclose(fpSC);
+				
+		//Optional Code to write out LO Phonon Absorption Rate to file
+		FILE* fpSA = fopen("ScatteringRateLOAbsorb.txt", "w+");
+		fprintf(fpSA, "\n");
+		//Indexing over initial subband i
+		for (int i = 0; i < LOAbsScatRate.size(); i++)
+		{
+			//Indexing over final subband f
+			for (int f = 0; f < LOAbsScatRate[0].size(); f++)
+			{
+				//Indexing over magnitude of ki	
+				for (int n = 0; n < LOAbsScatRate[0][0].size(); n++)
+				{
+					fprintf(fpSA, "%d \t", i);
+					fprintf(fpSA, "%d \t", f);
+					fprintf(fpSA, "%.6g \t", KGrid.KMagVec[n]);
+					fprintf(fpSA, "%.6g \t", LOAbsScatRate[i][f][n]);
+					fprintf(fpSA, "\n");
+				}
+
+			}
+
+		}
+		fclose(fpSA);
+
+		//Optional Code to write out EE Scattering Rate to file
+		FILE* fpSEE = fopen("ScatteringRateEE.txt", "w+");
+		fprintf(fpSEE, "\n");
+		//Indexing over initial subband i
+		for (int i = 0; i < EEScatRate.size(); i++)
+		{
+			//Indexing over final subband f
+			for (int f = 0; f < EEScatRate[0].size(); f++)
+			{
+				//Indexing over final subband g
+				for (int g = 0; g < EEScatRate[0][0].size(); g++)
+				{
+					//Indexing over final subband H
+					for (int H = 0; H < EEScatRate[0][0][0].size(); H++)
+					{
+						//Indexing over magnitude of ki	
+						for (int n = 0; n < EEScatRate[0][0][0][0].size(); n++)
+						{
+							fprintf(fpSEE, "%d \t", i);
+							fprintf(fpSEE, "%d \t", f);
+							fprintf(fpSEE, "%d \t", g);
+							fprintf(fpSEE, "%d \t", H);
+							fprintf(fpSEE, "%.6g \t", KGrid.KMagVec[n]);
+							fprintf(fpSEE, "%.6g \t", EEScatRate[i][f][g][H][n]);
+							fprintf(fpSEE, "\n");
+						}
+
+					}
+
+				}
+			}
+		}
+		fclose(fpSEE);
+		
 		
 		/*
 		//Print out K Grid Values

@@ -14,5 +14,5 @@ ScatteringRateMatrix LOPhononEmitScatRateCalc(FormFactorStruct LOPhononFF, Poiss
 
 ScatteringRateMatrix LOPhononAbsScatRateCalc(FormFactorStruct LOPhononFF, PoissonResult PResult, KGridStruct KGrid, LOPhonStruct LOPhononParam, double TL);
 
-ScatteringRateMatrix EEScatRateCalc(FormFactorEEStruct EEFF, PoissonResult PResult, KGridStruct KGrid, double TL, int Numq);
+ScatteringRateEEMatrix EEScatRateCalc(FormFactorEEStruct EEFF, PoissonResult PResult, KGridStruct KGrid, double TL, int Numq);
 

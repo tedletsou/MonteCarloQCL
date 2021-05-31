@@ -1,10 +1,12 @@
-%close all
+% Import WaveFunctions.txt
+close all
 
 WaveFuncData = importdata("WaveFunctions.txt");
 
 Eigenenergies=WaveFuncData(1,:);
 WaveFunctions=WaveFuncData(3:end,:);
 
+% Import Potential.txt
 GridData = importdata("Potential.txt");
 
 Z = GridData(:, 2);
@@ -44,11 +46,17 @@ opts.EmptyLineRule = "read";
 opts = setvaropts(opts, "VarName15", "WhitespaceRule", "preserve");
 opts = setvaropts(opts, "VarName15", "EmptyFieldRule", "auto");
 
+%% Phonon Rates 
+
+
 % Import the LO Phonon Emission RAte
 tbl = readtable("C:\Users\andre\source\repos\MonteCarloQCL\MonteCarloQCL\ScatteringRateLOEmission.txt", opts);
 
 % Import the LO Phonon Absoprtion RAte
 tb2 = readtable("C:\Users\andre\source\repos\MonteCarloQCL\MonteCarloQCL\ScatteringRateLOAbsorb.txt", opts);
+
+
+%% EE Form Factor
 
 clear opts
 
@@ -67,8 +75,12 @@ opts.VariableTypes = ["double", "double", "double", "double", "double", "double"
 opts.ExtraColumnsRule = "ignore";
 opts.EmptyLineRule = "read";
 
+
 % Import the EE Form Factor Original UpSampled
 tb3 = readtable("C:\Users\andre\source\repos\MonteCarloQCL\MonteCarloQCL\FormFactorEEOriginal.txt", opts);
+
+
+%% EE Form Factor Upsampled
 
 clear opts
 
@@ -89,6 +101,30 @@ opts.EmptyLineRule = "read";
 
 % Import the EE Form Factor Original UpSampled
 tb4 = readtable("C:\Users\andre\source\repos\MonteCarloQCL\MonteCarloQCL\FormFactorEEUpSampled.txt", opts);
+
+
+%% EE Scattering Rate
+
+clear opts
+
+% Change opts to import EE Form Factor
+opts = delimitedTextImportOptions("NumVariables", 4);
+
+% Specify range and delimiter
+opts.DataLines = [2, Inf];
+opts.Delimiter = " \t";
+
+% Specify column names and types
+opts.VariableNames = ["i", "f", "k", "EEx"];
+opts.VariableTypes = ["double", "double", "double", "double"];
+
+% Specify file level properties
+opts.ExtraColumnsRule = "ignore";
+opts.EmptyLineRule = "read";
+
+% Import the EE Scattering Rate
+tb5 = readtable("C:\Users\andre\source\repos\MonteCarloQCL\MonteCarloQCL\ScatteringRateEE.txt", opts);
+
 
 %% Convert to output type
 VarName10 = tbl.VarName10;
@@ -113,6 +149,9 @@ QvecUp = tb4.qx;
 FFEEUpvec = tb4.FFx;
 
 NumQUp=length(QvecUp)/(NumEigenStates^4)
+
+kEE = tb5.k;
+EERate = tb5.EEx;
 
 for n=1:NumEigenStates
     for m=1:NumEigenStates
@@ -215,6 +254,31 @@ end
 figure
 hold on
 for n=1:1
-    plot(reshape((qEEUp(n,1,1,2,:)),1,[]),(reshape(FFEEUp(n,1,1,2,:),1,[])),strcat(ColorPick2(n),'o'))
+    plot(reshape((qEEUp(n,1,1,1,:)),1,[]),(reshape(FFEEUp(n,1,1,1,:),1,[])),strcat(ColorPick2(n),'o'))
 end
+
+
+for n=1:NumEigenStates
+    for m=1:NumEigenStates
+        for a=1:NumK
+            RateMatEE(n,m,a)=EERate((n-1)*NumK*NumEigenStates+(m-1)*NumK+a);
+        end
+    end
+end
+
+for n=1:NumEigenStates
+    for m=1:NumEigenStates
+        for a=1:NumK
+            KiMatEE(n,m,a)=kEE((n-1)*NumK*NumEigenStates+(m-1)*NumK+a);
+        end
+    end
+end
+
+
+figure
+hold on
+for n=1:6
+    plot(reshape((KiMatEE(n,1,:)),1,[]),reshape((RateMatEE(n,1,:)),1,[]).^2,ColorPick2(n))
+end
+
 %axis([1e9 3e9 0 1e-20])

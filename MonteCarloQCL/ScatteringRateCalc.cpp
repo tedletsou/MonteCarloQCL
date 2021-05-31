@@ -218,7 +218,7 @@ ScatteringRateMatrix LOPhononAbsScatRateCalc(FormFactorStruct LOPhononFF, Poisso
 }
 
 
-ScatteringRateMatrix EEScatRateCalc(FormFactorEEStruct EEFF, PoissonResult PResult, KGridStruct KGrid, double TL, int Numq)
+ScatteringRateEEMatrix EEScatRateCalc(FormFactorEEStruct EEFF, PoissonResult PResult, KGridStruct KGrid, double TL, int Numq)
 {
 	//Find Maximum energy of electron before leaving the well, Emax
 	// Find min and max of conduction band energy after Poisson Effect 
@@ -266,24 +266,35 @@ ScatteringRateMatrix EEScatRateCalc(FormFactorEEStruct EEFF, PoissonResult PResu
 	//Momentum exchange between initial and final states of primary electron
 	double qxy;
 
+	//Use a simple screening model for e-e scattering, where qxy = qxy + qs, qscreen is dependent on carrier denisty for a given subband and effective mass of subband 
+	double qscreen;
+
 	//q step, resolution in qvals used in the Form Factor Calculation
 	double qs = EEFF.qvals[1] - EEFF.qvals[0];
 
 	//nq , momentum index for the EE Form Factor Calculation
 	int nq;
 
+	//Prefactor for the Scattering Rate: e^4/(4*pi*hbar^3*(4*pi*Ep)^2)
+	double PreFac = ec*ec*ec*ec/(64*Pi*Pi*Pi*hbar*hbar*hbar * Ep0 * Ep0 * PResult.NewZStruct.ZPermitivity[0] * PResult.NewZStruct.ZPermitivity[0]);
+
+
 	//Compute Scattering Rate Integral for initial subband 1st electron i, final subband 1st electron f, initial subband 2nd electron g, 
 	//  2nd electron final subband H, theta angle between difference of mometna of 1st and 2nd electron, Alpha angle between initial 1st and 2nd electron, 
 	// kg the momentum of the 2nd electron
 
 	//Initialize Electron Electron Rate Matrix zero
-	ScatteringRateMatrix EEResult(NumSb, std::vector<std::vector<double>>(NumSb, std::vector<double>(Numk, 0)));
+	//ScatteringRateMatrix EEResult(NumSb, std::vector<std::vector<double>>(NumSb, std::vector<double>(Numk, 0)));
+	ScatteringRateEEMatrix EEResult(PResult.NewWaveFunctions.size(), std::vector<std::vector<std::vector<std::vector<double>>>>(PResult.NewWaveFunctions.size(), std::vector<std::vector<std::vector<double>>>(PResult.NewWaveFunctions.size(), std::vector<std::vector<double>>(PResult.NewWaveFunctions.size(), std::vector<double>(Numk, 0)))));
 
 	//Initialize Ei Initial Energy, DKo2 k-vector corresponding to difference in initial and final energy of the electrons
 	double Ei, DKo2;
 
 	//Kig2 : Kig^2 , Kig is the diffence in intial momentum between electron 1 and 2
 	double Kig2;
+
+	//Kdelta : Small value that is Kig2/100, used because sqrt function yields small error that makes qxy imaginary for DKo2=0
+	double Kdelta;
 
 	//Probability of 2nd electron state being occupied, currently uses simple fermi-distribution
 	double PKg;
@@ -294,11 +305,17 @@ ScatteringRateMatrix EEScatRateCalc(FormFactorEEStruct EEFF, PoissonResult PResu
 	//Initialize Accumulated Scattering Rate over subbands g and H
 	double SRAccum=0;
 
+	//Debug variable
+	double Val = 0;
+
 	//Indexing over initial subband i
 	for (int i = 0; i < NumSb; i++)
 	{
 		//Compute initial guess for Effective Mass
 		ms = CalcAverageEffectiveMass(PResult.NewZStruct, PResult.NewWaveFunctions[i], PResult.EigenEnergies[i]);
+
+		//Compute the contribution to screening, qscreen
+		qscreen = ec*ec*ms/(2 * Ep0 * PResult.NewZStruct.ZPermitivity[0] * Pi *hbar*hbar) * FermiDist(SubE[i], PResult.u, TL);
 
 		//Indexing over final subband f
 		for (int f = 0; f < NumSb; f++)
@@ -312,6 +329,10 @@ ScatteringRateMatrix EEScatRateCalc(FormFactorEEStruct EEFF, PoissonResult PResu
 					//Indexing over final subband H for 2nd electron
 					for (int H = 0; H < NumSb; H++)
 					{
+						
+						//For Debug						
+						//std::cout << "i: " << i << "  f: " << f << "  n: " << n << "  g: " << g << "  H: " << H << std::endl;
+					
 						//k-vector corresponding to difference in initial and final energy of the electrons
 						DKo2 = 4 * ms / (hbar * hbar) * ec * (SubE[i] + SubE[g] - SubE[f] - SubE[H]);
 
@@ -329,41 +350,73 @@ ScatteringRateMatrix EEScatRateCalc(FormFactorEEStruct EEFF, PoissonResult PResu
 								//Calculate Kig^2 = Ki^2+Kg^2 -2*Ki*Kg*cos(alpha) 
 								Kig2 = KGrid.KMagVec[n] * KGrid.KMagVec[n] + KGrid.KMagVec[v] * KGrid.KMagVec[v] - 2 * KGrid.KMagVec[n] * KGrid.KMagVec[v] * cos(Alpha);
 
-								for (int th = 0; th < NumTh; th++)
+								//Small value of k that prevents the calculation of qxy from being imaginary, due to round off error in sqrt
+								Kdelta = sqrt(Kig2) / 1000;
+
+								if ((DKo2 + Kig2 <= 0) or (Kig2 == 0))
 								{
-									//Theta the independent integration variable
-									Theta = th * DThetha;
+									// Integrate Nothing, Energy Conservation not conserved 
+								}
+								else
+								{ 
+									for (int th = 0; th < NumTh; th++)
+									{
+										//Theta the independent integration variable
+										Theta = th * DThetha;
 
-									//Find the magnitude of q the the momentum difference between Ki and Kf using: sqrt(2*Kig^2 + DKo^2 - 2*Kig*sqrt(Kig^2+DKo^2)*cos(Theta) ) /2
-									qxy = sqrt(2 * Kig2 + DKo2 - 2 * sqrt(Kig2) * sqrt(Kig2 + DKo2) * cos(Theta)) / 2;
+										//Find the magnitude of q the the momentum difference between Ki and Kf using: sqrt(2*Kig^2 + DKo^2 - 2*Kig*sqrt(Kig^2+DKo^2)*cos(Theta) ) /2, screen e-e interaction by adding qscreen
+										qxy = sqrt(2 * Kig2 + DKo2 - 2 * sqrt(Kig2) * sqrt(Kig2 + DKo2) * cos(Theta) + Kdelta) / 2 + qscreen;
 
-									//Using the qxy calculated above, interpolate the FormFactor for EE Scattering
-									//FFInterp = FormFactorEEInterpolate(EEFF, i, f, g, H, qxy);
+										//Using the qxy calculated above, interpolate the FormFactor for EE Scattering
+										
+										//Use index nq for the value of qxy, saves time compared to linear interpolation 
+										nq = int(floor(qxy / qs));
 
-									nq = int(floor(qxy / qs));
+										/*
+										//For Debug purposes 
+										if (n == 50)
+										{
+											std::cout << "i: " << i << "  f: " << f << "  g: " << g << "  H: " << H << " Kig2: " << Kig2 << "qxy: " << qxy << "  nq: " << nq << " theta: " << Theta << " Dko2: " << DKo2 << std::endl; // "   Upsampled FF: " << EEFF.FormFactor[i][f][g][H][nq] << std::endl;
+										}
+										
+										//std::cout << "i: " << i << "  f: " << f << "  g: " << g << "  H: " << H << " Kig2: " << Kig2 << "qxy: " << qxy << "  nq: " << nq << std::endl; // "   Upsampled FF: " << EEFF.FormFactor[i][f][g][H][nq] << std::endl;
+										*/
+										
+										//Accumulate the Result:
+										//SRAccum += PKg * EEFF.FormFactor[i][f][g][H][nq] * EEFF.FormFactor[i][f][g][H][nq] /(qxy * qxy) * DThetha * DAlpha * KGrid.KMagVec[v] * DKg;
+										
+										Val = PKg * EEFF.FormFactor[i][f][g][H][nq] * EEFF.FormFactor[i][f][g][H][nq] / (qxy * qxy) * DThetha * DAlpha * KGrid.KMagVec[v] * DKg;
 
-									//FFInterp = 5;
+										SRAccum += Val;
+										//std::cout << "i: " << i << "  f: " << f << "  g: " << g << "  H: " << H << "  Theta: " << Theta << "  Kn: " << KGrid.KMagVec[n] << "  Kv: " << KGrid.KMagVec[v] << "  Kig2: " << Kig2 << "  Dko2: " << DKo2 << " qxy: " << qxy << "  FF: " << EEFF.FormFactor[i][f][g][H][nq] << "  Val: " << Val << "  SRAccum: " << SRAccum  << std::endl; // "   Upsampled FF: " << EEFF.FormFactor[i][f][g][H][nq] << std::endl;
+										
 
-									//Accumulate the Result:
-									SRAccum += PKg * EEFF.FormFactor[i][f][g][H][nq] * DThetha * DAlpha * KGrid.KMagVec[v] * DKg;
-									//SRAccum += FFInterp;
-									std::cout << "i: " << i << "  f: " << f << "  g: " << g << "  H: " << H << "  qxy: " << qxy << "  nq: " << nq << "   Upsampled FF: " << EEFF.FormFactor[i][f][g][H][nq] << std::endl;
+									}	
 								}
 
 							}
-
+							
 							//Printing Vals for Debug
 							//std::cout << "NLO:  " << LOGaAs.NLO << std::endl;
 							//std::cout << "i: " << i << "  f: " << f << "  Kf: " << Kf << "  Ki: " << KGrid.KMagVec[n] << "  q: " << q << "  Ei: " << PResult.EigenEnergies[i] << "  Ef: " << PResult.EigenEnergies[f] <<  std::endl;
 						}
+						// Accumulate the Scattering rate over subbands g and H, multiplied my the prefactor which includes effective mass
+						EEResult[i][f][g][H][n] = PreFac * ms * SRAccum;
+
+						//Reset SRAccum 
+						SRAccum = 0;						
+
+						//std::cout << "i: " << i << "  f: " << f << "  g: " << g << "  H: " << H << "	ki index  " << n  << "  Theta  " << Theta << "  Kig2: " << Kig2 << "  Dko2: " << DKo2 << " qxy: " << qxy << "  FF: " << EEFF.FormFactor[i][f][g][H][nq] << "  Val: " << Val << "  EERate: " << EEResult[i][f][g][H][n] << std::endl; // "   Upsampled FF: " << EEFF.FormFactor[i][f][g][H][nq] << std::endl;
 					
+						
+						//std::cout << "EEResult:  " << EEResult[i][f][g][H][n] << std::endl;
+						
 
 					}
 				}
-				// Accumulate the Scattering rate over subbands g and H
-				EEResult[i][f][n] = EEResult[i][f][n] + SRAccum;
+				
 			}
-		}
+		} 
 	}
 
 	return EEResult;

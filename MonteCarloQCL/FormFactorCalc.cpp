@@ -400,7 +400,7 @@ FormFactorEEStruct FormFactorEECalc(PoissonResult PResult, int Numq)
 							}
 						}
 						// Compute F(i,f,g,h,n,) = FF^2/qxy^2, speeds up calculation of EE scattering rate in ScatteringRateCalc.cpp
-						FormFactorEE[i][f][g][H][n] = FormFactorEE[i][f][g][H][n] * FormFactorEE[i][f][g][H][n] / (q[n] * q[n]);
+						//FormFactorEE[i][f][g][H][n] = FormFactorEE[i][f][g][H][n] * FormFactorEE[i][f][g][H][n] / (q[n] * q[n]);
 					}
 				}
 			}
